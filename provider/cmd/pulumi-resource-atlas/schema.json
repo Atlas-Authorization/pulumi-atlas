@@ -1,0 +1,2351 @@
+{
+    "name": "atlas",
+    "displayName": "Atlas",
+    "description": "A Pulumi package for managing Atlas authentication-platform resources (OAuth clients, SSO connections, resource servers, JWT templates, webhooks, roles, organizations, custom domains and more) as code.",
+    "keywords": [
+        "pulumi",
+        "atlas",
+        "auth",
+        "authentication",
+        "identity",
+        "category/network",
+        "category/infrastructure"
+    ],
+    "homepage": "https://atlasauth.net",
+    "license": "Apache-2.0",
+    "attribution": "This Pulumi package is based on the [`atlas` Terraform Provider](https://github.com/Atlas-Authorization/terraform-provider-atlas).",
+    "repository": "https://github.com/Atlas-Authorization/pulumi-atlas",
+    "publisher": "Atlas-Authorization",
+    "meta": {
+        "moduleFormat": "(.*)(?:/[^/]*)"
+    },
+    "language": {
+        "csharp": {
+            "packageReferences": {
+                "Pulumi": "3.*"
+            },
+            "namespaces": {
+                "atlas": "Atlas"
+            },
+            "compatibility": "tfbridge20",
+            "rootNamespace": "AtlasAuthorization"
+        },
+        "go": {
+            "importBasePath": "github.com/Atlas-Authorization/pulumi-atlas/sdk/go/atlas",
+            "generateResourceContainerTypes": true,
+            "generateExtraInputTypes": true
+        },
+        "nodejs": {
+            "packageName": "@atlas-authorization/pulumi-atlas",
+            "packageDescription": "A Pulumi package for managing Atlas authentication-platform resources (OAuth clients, SSO connections, resource servers, JWT templates, webhooks, roles, organizations, custom domains and more) as code.",
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/Atlas-Authorization/terraform-provider-atlas)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-atlas` repo](https://github.com/Atlas-Authorization/pulumi-atlas/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-atlas` repo](https://github.com/Atlas-Authorization/terraform-provider-atlas/issues).",
+            "dependencies": {
+                "@pulumi/pulumi": "^3.0.0"
+            },
+            "devDependencies": {
+                "@types/node": "^18"
+            },
+            "compatibility": "tfbridge20",
+            "disableUnionOutputTypes": true
+        },
+        "python": {
+            "packageName": "atlas_authorization_pulumi_atlas",
+            "requires": {
+                "pulumi": "\u003e=3.0.0,\u003c4.0.0"
+            },
+            "readme": "\u003e This provider is a derived work of the [Terraform Provider](https://github.com/Atlas-Authorization/terraform-provider-atlas)\n\u003e distributed under [MPL 2.0](https://www.mozilla.org/en-US/MPL/2.0/). If you encounter a bug or missing feature,\n\u003e first check the [`pulumi-atlas` repo](https://github.com/Atlas-Authorization/pulumi-atlas/issues); however, if that doesn't turn up anything,\n\u003e please consult the source [`terraform-provider-atlas` repo](https://github.com/Atlas-Authorization/terraform-provider-atlas/issues).",
+            "compatibility": "tfbridge20",
+            "pyproject": {}
+        }
+    },
+    "config": {
+        "variables": {
+            "apiUrl": {
+                "type": "string",
+                "description": "Base URL of the Atlas Backend API. Defaults to `https://api.atlasauth.net`, or the `ATLAS_API_URL` environment variable when set."
+            },
+            "secretKey": {
+                "type": "string",
+                "description": "Atlas instance secret key (`sk_...`). Prefer the `ATLAS_SECRET_KEY` environment variable so the key never lands in state or config.",
+                "secret": true
+            }
+        }
+    },
+    "types": {
+        "atlas:index/ResourceServerScope:ResourceServerScope": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "Optional human-readable description.\n"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The scope string (e.g. read:widgets).\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "value"
+            ]
+        },
+        "atlas:index/SsoConnectionClaimRoleMapping:SsoConnectionClaimRoleMapping": {
+            "properties": {
+                "claim": {
+                    "type": "string",
+                    "description": "The claim name.\n"
+                },
+                "roleKey": {
+                    "type": "string",
+                    "description": "The Atlas role key to grant.\n"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The claim value to match.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "claim",
+                "roleKey",
+                "value"
+            ]
+        },
+        "atlas:index/getResourceServerScope:getResourceServerScope": {
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "Optional description.\n"
+                },
+                "value": {
+                    "type": "string",
+                    "description": "The scope string.\n"
+                }
+            },
+            "type": "object",
+            "required": [
+                "description",
+                "value"
+            ],
+            "language": {
+                "nodejs": {
+                    "requiredInputs": []
+                }
+            }
+        }
+    },
+    "provider": {
+        "description": "The provider type for the atlas package. By default, resources use package-wide configuration\nsettings, however an explicit `Provider` instance may be created and passed during resource\nconstruction to achieve fine-grained programmatic control over provider settings. See the\n[documentation](https://www.pulumi.com/docs/reference/programming-model/#providers) for more information.\n",
+        "properties": {
+            "apiUrl": {
+                "type": "string",
+                "description": "Base URL of the Atlas Backend API. Defaults to `https://api.atlasauth.net`, or the `ATLAS_API_URL` environment variable when set."
+            },
+            "secretKey": {
+                "type": "string",
+                "description": "Atlas instance secret key (`sk_...`). Prefer the `ATLAS_SECRET_KEY` environment variable so the key never lands in state or config.",
+                "secret": true
+            }
+        },
+        "inputProperties": {
+            "apiUrl": {
+                "type": "string",
+                "description": "Base URL of the Atlas Backend API. Defaults to `https://api.atlasauth.net`, or the `ATLAS_API_URL` environment variable when set."
+            },
+            "secretKey": {
+                "type": "string",
+                "description": "Atlas instance secret key (`sk_...`). Prefer the `ATLAS_SECRET_KEY` environment variable so the key never lands in state or config.",
+                "secret": true
+            }
+        },
+        "methods": {
+            "terraformConfig": "pulumi:providers:atlas/terraformConfig"
+        }
+    },
+    "resources": {
+        "atlas:index/billingPlan:BillingPlan": {
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "description": "Whether the plan is offered. Defaults to true."
+                },
+                "amount": {
+                    "type": "string",
+                    "description": "A free-form display string for the price, stored verbatim by Atlas — not parsed or converted. Use whatever units you display (e.g. `12.00` for $12, or \u003cspan pulumi-lang-nodejs=\"`1200`\" pulumi-lang-dotnet=\"`1200`\" pulumi-lang-go=\"`1200`\" pulumi-lang-python=\"`1200`\" pulumi-lang-yaml=\"`1200`\" pulumi-lang-java=\"`1200`\" pulumi-lang-hcl=\"`1200`\"\u003e`1200`\u003c/span\u003e for cents); Atlas does not interpret it. Pair it with \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`interval`\" pulumi-lang-dotnet=\"`Interval`\" pulumi-lang-go=\"`interval`\" pulumi-lang-python=\"`interval`\" pulumi-lang-yaml=\"`interval`\" pulumi-lang-java=\"`interval`\" pulumi-lang-hcl=\"`interval`\"\u003e`interval`\u003c/span\u003e."
+                },
+                "audience": {
+                    "type": "string",
+                    "description": "Who may subscribe: \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`org`\" pulumi-lang-dotnet=\"`Org`\" pulumi-lang-go=\"`org`\" pulumi-lang-python=\"`org`\" pulumi-lang-yaml=\"`org`\" pulumi-lang-java=\"`org`\" pulumi-lang-hcl=\"`org`\"\u003e`org`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e."
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "ISO currency code (e.g. \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e."
+                },
+                "features": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Feature keys this plan grants, surfaced as the \u003cspan pulumi-lang-nodejs=\"`fea`\" pulumi-lang-dotnet=\"`Fea`\" pulumi-lang-go=\"`fea`\" pulumi-lang-python=\"`fea`\" pulumi-lang-yaml=\"`fea`\" pulumi-lang-java=\"`fea`\" pulumi-lang-hcl=\"`fea`\"\u003e`fea`\u003c/span\u003e session claim."
+                },
+                "free": {
+                    "type": "boolean",
+                    "description": "True when the plan has no \u003cspan pulumi-lang-nodejs=\"`stripePriceId`\" pulumi-lang-dotnet=\"`StripePriceId`\" pulumi-lang-go=\"`stripePriceId`\" pulumi-lang-python=\"`stripe_price_id`\" pulumi-lang-yaml=\"`stripePriceId`\" pulumi-lang-java=\"`stripePriceId`\" pulumi-lang-hcl=\"`stripe_price_id`\"\u003e`stripePriceId`\u003c/span\u003e (the free tier)."
+                },
+                "interval": {
+                    "type": "string",
+                    "description": "Billing interval: \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`year`\" pulumi-lang-dotnet=\"`Year`\" pulumi-lang-go=\"`year`\" pulumi-lang-python=\"`year`\" pulumi-lang-yaml=\"`year`\" pulumi-lang-java=\"`year`\" pulumi-lang-hcl=\"`year`\"\u003e`year`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e."
+                },
+                "limits": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    },
+                    "description": "Numeric caps this plan grants, keyed by limit name (e.g. `{\u003cspan pulumi-lang-nodejs=\" maxDevices \" pulumi-lang-dotnet=\" MaxDevices \" pulumi-lang-go=\" maxDevices \" pulumi-lang-python=\" max_devices \" pulumi-lang-yaml=\" maxDevices \" pulumi-lang-java=\" maxDevices \" pulumi-lang-hcl=\" max_devices \"\u003e maxDevices \u003c/span\u003e= 5,\u003cspan pulumi-lang-nodejs=\" maxSeats \" pulumi-lang-dotnet=\" MaxSeats \" pulumi-lang-go=\" maxSeats \" pulumi-lang-python=\" max_seats \" pulumi-lang-yaml=\" maxSeats \" pulumi-lang-java=\" maxSeats \" pulumi-lang-hcl=\" max_seats \"\u003e maxSeats \u003c/span\u003e= 25 }`). Where \u003cspan pulumi-lang-nodejs=\"`features`\" pulumi-lang-dotnet=\"`Features`\" pulumi-lang-go=\"`features`\" pulumi-lang-python=\"`features`\" pulumi-lang-yaml=\"`features`\" pulumi-lang-java=\"`features`\" pulumi-lang-hcl=\"`features`\"\u003e`features`\u003c/span\u003e answer \"can they?\", limits answer \"how many?\"; they are surfaced on the verified token and merged under any per-organization override. Unset keeps the plan's current limits (none for a new plan); set to `{}` to clear them."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable plan name."
+                },
+                "pricingModel": {
+                    "type": "string",
+                    "description": "\u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`perSeat`\" pulumi-lang-dotnet=\"`PerSeat`\" pulumi-lang-go=\"`perSeat`\" pulumi-lang-python=\"`per_seat`\" pulumi-lang-yaml=\"`perSeat`\" pulumi-lang-java=\"`perSeat`\" pulumi-lang-hcl=\"`per_seat`\"\u003e`perSeat`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e."
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "URL-safe, instance-unique plan key — surfaced as the \u003cspan pulumi-lang-nodejs=\"`pla`\" pulumi-lang-dotnet=\"`Pla`\" pulumi-lang-go=\"`pla`\" pulumi-lang-python=\"`pla`\" pulumi-lang-yaml=\"`pla`\" pulumi-lang-java=\"`pla`\" pulumi-lang-hcl=\"`pla`\"\u003e`pla`\u003c/span\u003e session claim."
+                },
+                "stripeMeterId": {
+                    "type": "string",
+                    "description": "Stripe meter id, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                },
+                "stripePriceId": {
+                    "type": "string",
+                    "description": "The recurring Stripe price a subscriber is charged. Omit for the free tier."
+                },
+                "trialDays": {
+                    "type": "integer",
+                    "description": "Free trial length in days (0–3650), or omitted for none."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch ms)."
+                },
+                "usageUnit": {
+                    "type": "string",
+                    "description": "Usage unit label, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                }
+            },
+            "required": [
+                "active",
+                "amount",
+                "audience",
+                "createdAt",
+                "currency",
+                "features",
+                "free",
+                "interval",
+                "limits",
+                "name",
+                "pricingModel",
+                "slug",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "active": {
+                    "type": "boolean",
+                    "description": "Whether the plan is offered. Defaults to true."
+                },
+                "amount": {
+                    "type": "string",
+                    "description": "A free-form display string for the price, stored verbatim by Atlas — not parsed or converted. Use whatever units you display (e.g. `12.00` for $12, or \u003cspan pulumi-lang-nodejs=\"`1200`\" pulumi-lang-dotnet=\"`1200`\" pulumi-lang-go=\"`1200`\" pulumi-lang-python=\"`1200`\" pulumi-lang-yaml=\"`1200`\" pulumi-lang-java=\"`1200`\" pulumi-lang-hcl=\"`1200`\"\u003e`1200`\u003c/span\u003e for cents); Atlas does not interpret it. Pair it with \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`interval`\" pulumi-lang-dotnet=\"`Interval`\" pulumi-lang-go=\"`interval`\" pulumi-lang-python=\"`interval`\" pulumi-lang-yaml=\"`interval`\" pulumi-lang-java=\"`interval`\" pulumi-lang-hcl=\"`interval`\"\u003e`interval`\u003c/span\u003e."
+                },
+                "audience": {
+                    "type": "string",
+                    "description": "Who may subscribe: \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`org`\" pulumi-lang-dotnet=\"`Org`\" pulumi-lang-go=\"`org`\" pulumi-lang-python=\"`org`\" pulumi-lang-yaml=\"`org`\" pulumi-lang-java=\"`org`\" pulumi-lang-hcl=\"`org`\"\u003e`org`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e."
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "ISO currency code (e.g. \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e."
+                },
+                "features": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Feature keys this plan grants, surfaced as the \u003cspan pulumi-lang-nodejs=\"`fea`\" pulumi-lang-dotnet=\"`Fea`\" pulumi-lang-go=\"`fea`\" pulumi-lang-python=\"`fea`\" pulumi-lang-yaml=\"`fea`\" pulumi-lang-java=\"`fea`\" pulumi-lang-hcl=\"`fea`\"\u003e`fea`\u003c/span\u003e session claim."
+                },
+                "interval": {
+                    "type": "string",
+                    "description": "Billing interval: \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`year`\" pulumi-lang-dotnet=\"`Year`\" pulumi-lang-go=\"`year`\" pulumi-lang-python=\"`year`\" pulumi-lang-yaml=\"`year`\" pulumi-lang-java=\"`year`\" pulumi-lang-hcl=\"`year`\"\u003e`year`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e."
+                },
+                "limits": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "number"
+                    },
+                    "description": "Numeric caps this plan grants, keyed by limit name (e.g. `{\u003cspan pulumi-lang-nodejs=\" maxDevices \" pulumi-lang-dotnet=\" MaxDevices \" pulumi-lang-go=\" maxDevices \" pulumi-lang-python=\" max_devices \" pulumi-lang-yaml=\" maxDevices \" pulumi-lang-java=\" maxDevices \" pulumi-lang-hcl=\" max_devices \"\u003e maxDevices \u003c/span\u003e= 5,\u003cspan pulumi-lang-nodejs=\" maxSeats \" pulumi-lang-dotnet=\" MaxSeats \" pulumi-lang-go=\" maxSeats \" pulumi-lang-python=\" max_seats \" pulumi-lang-yaml=\" maxSeats \" pulumi-lang-java=\" maxSeats \" pulumi-lang-hcl=\" max_seats \"\u003e maxSeats \u003c/span\u003e= 25 }`). Where \u003cspan pulumi-lang-nodejs=\"`features`\" pulumi-lang-dotnet=\"`Features`\" pulumi-lang-go=\"`features`\" pulumi-lang-python=\"`features`\" pulumi-lang-yaml=\"`features`\" pulumi-lang-java=\"`features`\" pulumi-lang-hcl=\"`features`\"\u003e`features`\u003c/span\u003e answer \"can they?\", limits answer \"how many?\"; they are surfaced on the verified token and merged under any per-organization override. Unset keeps the plan's current limits (none for a new plan); set to `{}` to clear them."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable plan name."
+                },
+                "pricingModel": {
+                    "type": "string",
+                    "description": "\u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`perSeat`\" pulumi-lang-dotnet=\"`PerSeat`\" pulumi-lang-go=\"`perSeat`\" pulumi-lang-python=\"`per_seat`\" pulumi-lang-yaml=\"`perSeat`\" pulumi-lang-java=\"`perSeat`\" pulumi-lang-hcl=\"`per_seat`\"\u003e`perSeat`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e."
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "URL-safe, instance-unique plan key — surfaced as the \u003cspan pulumi-lang-nodejs=\"`pla`\" pulumi-lang-dotnet=\"`Pla`\" pulumi-lang-go=\"`pla`\" pulumi-lang-python=\"`pla`\" pulumi-lang-yaml=\"`pla`\" pulumi-lang-java=\"`pla`\" pulumi-lang-hcl=\"`pla`\"\u003e`pla`\u003c/span\u003e session claim."
+                },
+                "stripeMeterId": {
+                    "type": "string",
+                    "description": "Stripe meter id, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                },
+                "stripePriceId": {
+                    "type": "string",
+                    "description": "The recurring Stripe price a subscriber is charged. Omit for the free tier."
+                },
+                "trialDays": {
+                    "type": "integer",
+                    "description": "Free trial length in days (0–3650), or omitted for none."
+                },
+                "usageUnit": {
+                    "type": "string",
+                    "description": "Usage unit label, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                }
+            },
+            "requiredInputs": [
+                "name",
+                "slug"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering BillingPlan resources.\n",
+                "properties": {
+                    "active": {
+                        "type": "boolean",
+                        "description": "Whether the plan is offered. Defaults to true."
+                    },
+                    "amount": {
+                        "type": "string",
+                        "description": "A free-form display string for the price, stored verbatim by Atlas — not parsed or converted. Use whatever units you display (e.g. `12.00` for $12, or \u003cspan pulumi-lang-nodejs=\"`1200`\" pulumi-lang-dotnet=\"`1200`\" pulumi-lang-go=\"`1200`\" pulumi-lang-python=\"`1200`\" pulumi-lang-yaml=\"`1200`\" pulumi-lang-java=\"`1200`\" pulumi-lang-hcl=\"`1200`\"\u003e`1200`\u003c/span\u003e for cents); Atlas does not interpret it. Pair it with \u003cspan pulumi-lang-nodejs=\"`currency`\" pulumi-lang-dotnet=\"`Currency`\" pulumi-lang-go=\"`currency`\" pulumi-lang-python=\"`currency`\" pulumi-lang-yaml=\"`currency`\" pulumi-lang-java=\"`currency`\" pulumi-lang-hcl=\"`currency`\"\u003e`currency`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`interval`\" pulumi-lang-dotnet=\"`Interval`\" pulumi-lang-go=\"`interval`\" pulumi-lang-python=\"`interval`\" pulumi-lang-yaml=\"`interval`\" pulumi-lang-java=\"`interval`\" pulumi-lang-hcl=\"`interval`\"\u003e`interval`\u003c/span\u003e."
+                    },
+                    "audience": {
+                        "type": "string",
+                        "description": "Who may subscribe: \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`org`\" pulumi-lang-dotnet=\"`Org`\" pulumi-lang-go=\"`org`\" pulumi-lang-python=\"`org`\" pulumi-lang-yaml=\"`org`\" pulumi-lang-java=\"`org`\" pulumi-lang-hcl=\"`org`\"\u003e`org`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`user`\" pulumi-lang-dotnet=\"`User`\" pulumi-lang-go=\"`user`\" pulumi-lang-python=\"`user`\" pulumi-lang-yaml=\"`user`\" pulumi-lang-java=\"`user`\" pulumi-lang-hcl=\"`user`\"\u003e`user`\u003c/span\u003e."
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "currency": {
+                        "type": "string",
+                        "description": "ISO currency code (e.g. \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e). Defaults to \u003cspan pulumi-lang-nodejs=\"`usd`\" pulumi-lang-dotnet=\"`Usd`\" pulumi-lang-go=\"`usd`\" pulumi-lang-python=\"`usd`\" pulumi-lang-yaml=\"`usd`\" pulumi-lang-java=\"`usd`\" pulumi-lang-hcl=\"`usd`\"\u003e`usd`\u003c/span\u003e."
+                    },
+                    "features": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Feature keys this plan grants, surfaced as the \u003cspan pulumi-lang-nodejs=\"`fea`\" pulumi-lang-dotnet=\"`Fea`\" pulumi-lang-go=\"`fea`\" pulumi-lang-python=\"`fea`\" pulumi-lang-yaml=\"`fea`\" pulumi-lang-java=\"`fea`\" pulumi-lang-hcl=\"`fea`\"\u003e`fea`\u003c/span\u003e session claim."
+                    },
+                    "free": {
+                        "type": "boolean",
+                        "description": "True when the plan has no \u003cspan pulumi-lang-nodejs=\"`stripePriceId`\" pulumi-lang-dotnet=\"`StripePriceId`\" pulumi-lang-go=\"`stripePriceId`\" pulumi-lang-python=\"`stripe_price_id`\" pulumi-lang-yaml=\"`stripePriceId`\" pulumi-lang-java=\"`stripePriceId`\" pulumi-lang-hcl=\"`stripe_price_id`\"\u003e`stripePriceId`\u003c/span\u003e (the free tier)."
+                    },
+                    "interval": {
+                        "type": "string",
+                        "description": "Billing interval: \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`year`\" pulumi-lang-dotnet=\"`Year`\" pulumi-lang-go=\"`year`\" pulumi-lang-python=\"`year`\" pulumi-lang-yaml=\"`year`\" pulumi-lang-java=\"`year`\" pulumi-lang-hcl=\"`year`\"\u003e`year`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`month`\" pulumi-lang-dotnet=\"`Month`\" pulumi-lang-go=\"`month`\" pulumi-lang-python=\"`month`\" pulumi-lang-yaml=\"`month`\" pulumi-lang-java=\"`month`\" pulumi-lang-hcl=\"`month`\"\u003e`month`\u003c/span\u003e."
+                    },
+                    "limits": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "number"
+                        },
+                        "description": "Numeric caps this plan grants, keyed by limit name (e.g. `{\u003cspan pulumi-lang-nodejs=\" maxDevices \" pulumi-lang-dotnet=\" MaxDevices \" pulumi-lang-go=\" maxDevices \" pulumi-lang-python=\" max_devices \" pulumi-lang-yaml=\" maxDevices \" pulumi-lang-java=\" maxDevices \" pulumi-lang-hcl=\" max_devices \"\u003e maxDevices \u003c/span\u003e= 5,\u003cspan pulumi-lang-nodejs=\" maxSeats \" pulumi-lang-dotnet=\" MaxSeats \" pulumi-lang-go=\" maxSeats \" pulumi-lang-python=\" max_seats \" pulumi-lang-yaml=\" maxSeats \" pulumi-lang-java=\" maxSeats \" pulumi-lang-hcl=\" max_seats \"\u003e maxSeats \u003c/span\u003e= 25 }`). Where \u003cspan pulumi-lang-nodejs=\"`features`\" pulumi-lang-dotnet=\"`Features`\" pulumi-lang-go=\"`features`\" pulumi-lang-python=\"`features`\" pulumi-lang-yaml=\"`features`\" pulumi-lang-java=\"`features`\" pulumi-lang-hcl=\"`features`\"\u003e`features`\u003c/span\u003e answer \"can they?\", limits answer \"how many?\"; they are surfaced on the verified token and merged under any per-organization override. Unset keeps the plan's current limits (none for a new plan); set to `{}` to clear them."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Human-readable plan name."
+                    },
+                    "pricingModel": {
+                        "type": "string",
+                        "description": "\u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`perSeat`\" pulumi-lang-dotnet=\"`PerSeat`\" pulumi-lang-go=\"`perSeat`\" pulumi-lang-python=\"`per_seat`\" pulumi-lang-yaml=\"`perSeat`\" pulumi-lang-java=\"`perSeat`\" pulumi-lang-hcl=\"`per_seat`\"\u003e`perSeat`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e. Defaults to \u003cspan pulumi-lang-nodejs=\"`flat`\" pulumi-lang-dotnet=\"`Flat`\" pulumi-lang-go=\"`flat`\" pulumi-lang-python=\"`flat`\" pulumi-lang-yaml=\"`flat`\" pulumi-lang-java=\"`flat`\" pulumi-lang-hcl=\"`flat`\"\u003e`flat`\u003c/span\u003e."
+                    },
+                    "slug": {
+                        "type": "string",
+                        "description": "URL-safe, instance-unique plan key — surfaced as the \u003cspan pulumi-lang-nodejs=\"`pla`\" pulumi-lang-dotnet=\"`Pla`\" pulumi-lang-go=\"`pla`\" pulumi-lang-python=\"`pla`\" pulumi-lang-yaml=\"`pla`\" pulumi-lang-java=\"`pla`\" pulumi-lang-hcl=\"`pla`\"\u003e`pla`\u003c/span\u003e session claim."
+                    },
+                    "stripeMeterId": {
+                        "type": "string",
+                        "description": "Stripe meter id, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                    },
+                    "stripePriceId": {
+                        "type": "string",
+                        "description": "The recurring Stripe price a subscriber is charged. Omit for the free tier."
+                    },
+                    "trialDays": {
+                        "type": "integer",
+                        "description": "Free trial length in days (0–3650), or omitted for none."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch ms)."
+                    },
+                    "usageUnit": {
+                        "type": "string",
+                        "description": "Usage unit label, for a \u003cspan pulumi-lang-nodejs=\"`metered`\" pulumi-lang-dotnet=\"`Metered`\" pulumi-lang-go=\"`metered`\" pulumi-lang-python=\"`metered`\" pulumi-lang-yaml=\"`metered`\" pulumi-lang-java=\"`metered`\" pulumi-lang-hcl=\"`metered`\"\u003e`metered`\u003c/span\u003e plan."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/domain:Domain": {
+            "properties": {
+                "certificateExpiresAt": {
+                    "type": "integer",
+                    "description": "Certificate expiry (epoch ms), once issued."
+                },
+                "cnameTarget": {
+                    "type": "string",
+                    "description": "The CNAME target to point the host at."
+                },
+                "cookieDomain": {
+                    "type": "string",
+                    "description": "The registrable cookie domain derived from the host, if resolvable."
+                },
+                "failureReason": {
+                    "type": "string",
+                    "description": "Most recent verification failure reason, if any."
+                },
+                "host": {
+                    "type": "string",
+                    "description": "The hostname to serve (e.g. auth.example.com). Immutable — forces replacement."
+                },
+                "live": {
+                    "type": "boolean",
+                    "description": "Whether the domain is fully live (DNS + certificate + cookie checks pass)."
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Domain role: fapi or accounts. Immutable — forces replacement."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Provisioning status (pending, active, ...)."
+                }
+            },
+            "required": [
+                "certificateExpiresAt",
+                "cnameTarget",
+                "cookieDomain",
+                "failureReason",
+                "host",
+                "live",
+                "role",
+                "status"
+            ],
+            "inputProperties": {
+                "host": {
+                    "type": "string",
+                    "description": "The hostname to serve (e.g. auth.example.com). Immutable — forces replacement."
+                },
+                "role": {
+                    "type": "string",
+                    "description": "Domain role: fapi or accounts. Immutable — forces replacement."
+                }
+            },
+            "requiredInputs": [
+                "host",
+                "role"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Domain resources.\n",
+                "properties": {
+                    "certificateExpiresAt": {
+                        "type": "integer",
+                        "description": "Certificate expiry (epoch ms), once issued."
+                    },
+                    "cnameTarget": {
+                        "type": "string",
+                        "description": "The CNAME target to point the host at."
+                    },
+                    "cookieDomain": {
+                        "type": "string",
+                        "description": "The registrable cookie domain derived from the host, if resolvable."
+                    },
+                    "failureReason": {
+                        "type": "string",
+                        "description": "Most recent verification failure reason, if any."
+                    },
+                    "host": {
+                        "type": "string",
+                        "description": "The hostname to serve (e.g. auth.example.com). Immutable — forces replacement."
+                    },
+                    "live": {
+                        "type": "boolean",
+                        "description": "Whether the domain is fully live (DNS + certificate + cookie checks pass)."
+                    },
+                    "role": {
+                        "type": "string",
+                        "description": "Domain role: fapi or accounts. Immutable — forces replacement."
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Provisioning status (pending, active, ...)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/emailTemplate:EmailTemplate": {
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The built-in template to override, e.g. \u003cspan pulumi-lang-nodejs=\"`verificationCode`\" pulumi-lang-dotnet=\"`VerificationCode`\" pulumi-lang-go=\"`verificationCode`\" pulumi-lang-python=\"`verification_code`\" pulumi-lang-yaml=\"`verificationCode`\" pulumi-lang-java=\"`verificationCode`\" pulumi-lang-hcl=\"`verification_code`\"\u003e`verificationCode`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`magicLink`\" pulumi-lang-dotnet=\"`MagicLink`\" pulumi-lang-go=\"`magicLink`\" pulumi-lang-python=\"`magic_link`\" pulumi-lang-yaml=\"`magicLink`\" pulumi-lang-java=\"`magicLink`\" pulumi-lang-hcl=\"`magic_link`\"\u003e`magicLink`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`passwordReset`\" pulumi-lang-dotnet=\"`PasswordReset`\" pulumi-lang-go=\"`passwordReset`\" pulumi-lang-python=\"`password_reset`\" pulumi-lang-yaml=\"`passwordReset`\" pulumi-lang-java=\"`passwordReset`\" pulumi-lang-hcl=\"`password_reset`\"\u003e`passwordReset`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`organizationInvitation`\" pulumi-lang-dotnet=\"`OrganizationInvitation`\" pulumi-lang-go=\"`organizationInvitation`\" pulumi-lang-python=\"`organization_invitation`\" pulumi-lang-yaml=\"`organizationInvitation`\" pulumi-lang-java=\"`organizationInvitation`\" pulumi-lang-hcl=\"`organization_invitation`\"\u003e`organizationInvitation`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`newDeviceSignIn`\" pulumi-lang-dotnet=\"`NewDeviceSignIn`\" pulumi-lang-go=\"`newDeviceSignIn`\" pulumi-lang-python=\"`new_device_sign_in`\" pulumi-lang-yaml=\"`newDeviceSignIn`\" pulumi-lang-java=\"`newDeviceSignIn`\" pulumi-lang-hcl=\"`new_device_sign_in`\"\u003e`newDeviceSignIn`\u003c/span\u003e. An unknown name is rejected by the API. Immutable — changing it forces replacement. Also the import id."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "Override subject line (max 200 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in subject."
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Override plain-text body (max 5000 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in body."
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "inputProperties": {
+                "name": {
+                    "type": "string",
+                    "description": "The built-in template to override, e.g. \u003cspan pulumi-lang-nodejs=\"`verificationCode`\" pulumi-lang-dotnet=\"`VerificationCode`\" pulumi-lang-go=\"`verificationCode`\" pulumi-lang-python=\"`verification_code`\" pulumi-lang-yaml=\"`verificationCode`\" pulumi-lang-java=\"`verificationCode`\" pulumi-lang-hcl=\"`verification_code`\"\u003e`verificationCode`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`magicLink`\" pulumi-lang-dotnet=\"`MagicLink`\" pulumi-lang-go=\"`magicLink`\" pulumi-lang-python=\"`magic_link`\" pulumi-lang-yaml=\"`magicLink`\" pulumi-lang-java=\"`magicLink`\" pulumi-lang-hcl=\"`magic_link`\"\u003e`magicLink`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`passwordReset`\" pulumi-lang-dotnet=\"`PasswordReset`\" pulumi-lang-go=\"`passwordReset`\" pulumi-lang-python=\"`password_reset`\" pulumi-lang-yaml=\"`passwordReset`\" pulumi-lang-java=\"`passwordReset`\" pulumi-lang-hcl=\"`password_reset`\"\u003e`passwordReset`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`organizationInvitation`\" pulumi-lang-dotnet=\"`OrganizationInvitation`\" pulumi-lang-go=\"`organizationInvitation`\" pulumi-lang-python=\"`organization_invitation`\" pulumi-lang-yaml=\"`organizationInvitation`\" pulumi-lang-java=\"`organizationInvitation`\" pulumi-lang-hcl=\"`organization_invitation`\"\u003e`organizationInvitation`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`newDeviceSignIn`\" pulumi-lang-dotnet=\"`NewDeviceSignIn`\" pulumi-lang-go=\"`newDeviceSignIn`\" pulumi-lang-python=\"`new_device_sign_in`\" pulumi-lang-yaml=\"`newDeviceSignIn`\" pulumi-lang-java=\"`newDeviceSignIn`\" pulumi-lang-hcl=\"`new_device_sign_in`\"\u003e`newDeviceSignIn`\u003c/span\u003e. An unknown name is rejected by the API. Immutable — changing it forces replacement. Also the import id."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "Override subject line (max 200 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in subject."
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Override plain-text body (max 5000 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in body."
+                }
+            },
+            "requiredInputs": [
+                "name"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering EmailTemplate resources.\n",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The built-in template to override, e.g. \u003cspan pulumi-lang-nodejs=\"`verificationCode`\" pulumi-lang-dotnet=\"`VerificationCode`\" pulumi-lang-go=\"`verificationCode`\" pulumi-lang-python=\"`verification_code`\" pulumi-lang-yaml=\"`verificationCode`\" pulumi-lang-java=\"`verificationCode`\" pulumi-lang-hcl=\"`verification_code`\"\u003e`verificationCode`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`magicLink`\" pulumi-lang-dotnet=\"`MagicLink`\" pulumi-lang-go=\"`magicLink`\" pulumi-lang-python=\"`magic_link`\" pulumi-lang-yaml=\"`magicLink`\" pulumi-lang-java=\"`magicLink`\" pulumi-lang-hcl=\"`magic_link`\"\u003e`magicLink`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`passwordReset`\" pulumi-lang-dotnet=\"`PasswordReset`\" pulumi-lang-go=\"`passwordReset`\" pulumi-lang-python=\"`password_reset`\" pulumi-lang-yaml=\"`passwordReset`\" pulumi-lang-java=\"`passwordReset`\" pulumi-lang-hcl=\"`password_reset`\"\u003e`passwordReset`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`organizationInvitation`\" pulumi-lang-dotnet=\"`OrganizationInvitation`\" pulumi-lang-go=\"`organizationInvitation`\" pulumi-lang-python=\"`organization_invitation`\" pulumi-lang-yaml=\"`organizationInvitation`\" pulumi-lang-java=\"`organizationInvitation`\" pulumi-lang-hcl=\"`organization_invitation`\"\u003e`organizationInvitation`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`newDeviceSignIn`\" pulumi-lang-dotnet=\"`NewDeviceSignIn`\" pulumi-lang-go=\"`newDeviceSignIn`\" pulumi-lang-python=\"`new_device_sign_in`\" pulumi-lang-yaml=\"`newDeviceSignIn`\" pulumi-lang-java=\"`newDeviceSignIn`\" pulumi-lang-hcl=\"`new_device_sign_in`\"\u003e`newDeviceSignIn`\u003c/span\u003e. An unknown name is rejected by the API. Immutable — changing it forces replacement. Also the import id."
+                    },
+                    "subject": {
+                        "type": "string",
+                        "description": "Override subject line (max 200 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in subject."
+                    },
+                    "text": {
+                        "type": "string",
+                        "description": "Override plain-text body (max 5000 characters). May contain `{{variable}}` placeholders. Omit to keep the built-in body."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/instanceConfig:InstanceConfig": {
+            "properties": {
+                "allowedOrigins": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Exact origins (`scheme://host[:port]`, no wildcards, no path) permitted for the widget / JS SDK and OAuth redirect validation. Native-app webview origins (`tauri://`, `capacitor://`, `ionic://`) are accepted."
+                },
+                "authConfig": {
+                    "type": "string",
+                    "description": "The instance auth configuration as a JSON object string (use `jsonencode(...)`). A PARTIAL patch merged into the current config server-side. State holds exactly the patch you wrote (round-tripped verbatim), NOT the server-merged object, so the plan is clean. The full effective configuration is exposed separately as \u003cspan pulumi-lang-nodejs=\"`authConfigResolved`\" pulumi-lang-dotnet=\"`AuthConfigResolved`\" pulumi-lang-go=\"`authConfigResolved`\" pulumi-lang-python=\"`auth_config_resolved`\" pulumi-lang-yaml=\"`authConfigResolved`\" pulumi-lang-java=\"`authConfigResolved`\" pulumi-lang-hcl=\"`auth_config_resolved`\"\u003e`authConfigResolved`\u003c/span\u003e."
+                },
+                "authConfigResolved": {
+                    "type": "string",
+                    "description": "The full effective configuration Atlas resolved from your \u003cspan pulumi-lang-nodejs=\"`authConfig`\" pulumi-lang-dotnet=\"`AuthConfig`\" pulumi-lang-go=\"`authConfig`\" pulumi-lang-python=\"`auth_config`\" pulumi-lang-yaml=\"`authConfig`\" pulumi-lang-java=\"`authConfig`\" pulumi-lang-hcl=\"`auth_config`\"\u003e`authConfig`\u003c/span\u003e plus defaults (read-only)."
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Instance creation time (epoch ms)."
+                },
+                "environment": {
+                    "type": "string",
+                    "description": "The instance environment (e.g. \u003cspan pulumi-lang-nodejs=\"`production`\" pulumi-lang-dotnet=\"`Production`\" pulumi-lang-go=\"`production`\" pulumi-lang-python=\"`production`\" pulumi-lang-yaml=\"`production`\" pulumi-lang-java=\"`production`\" pulumi-lang-hcl=\"`production`\"\u003e`production`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`development`\" pulumi-lang-dotnet=\"`Development`\" pulumi-lang-go=\"`development`\" pulumi-lang-python=\"`development`\" pulumi-lang-yaml=\"`development`\" pulumi-lang-java=\"`development`\" pulumi-lang-hcl=\"`development`\"\u003e`development`\u003c/span\u003e)."
+                },
+                "frontendApiHost": {
+                    "type": "string",
+                    "description": "The instance Frontend API host (read-only; auto-assigned by Atlas)."
+                },
+                "publishableKey": {
+                    "type": "string",
+                    "description": "The instance publishable key (`pk_...`)."
+                }
+            },
+            "required": [
+                "allowedOrigins",
+                "authConfig",
+                "authConfigResolved",
+                "createdAt",
+                "environment",
+                "frontendApiHost",
+                "publishableKey"
+            ],
+            "inputProperties": {
+                "allowedOrigins": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Exact origins (`scheme://host[:port]`, no wildcards, no path) permitted for the widget / JS SDK and OAuth redirect validation. Native-app webview origins (`tauri://`, `capacitor://`, `ionic://`) are accepted."
+                },
+                "authConfig": {
+                    "type": "string",
+                    "description": "The instance auth configuration as a JSON object string (use `jsonencode(...)`). A PARTIAL patch merged into the current config server-side. State holds exactly the patch you wrote (round-tripped verbatim), NOT the server-merged object, so the plan is clean. The full effective configuration is exposed separately as \u003cspan pulumi-lang-nodejs=\"`authConfigResolved`\" pulumi-lang-dotnet=\"`AuthConfigResolved`\" pulumi-lang-go=\"`authConfigResolved`\" pulumi-lang-python=\"`auth_config_resolved`\" pulumi-lang-yaml=\"`authConfigResolved`\" pulumi-lang-java=\"`authConfigResolved`\" pulumi-lang-hcl=\"`auth_config_resolved`\"\u003e`authConfigResolved`\u003c/span\u003e."
+                }
+            },
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering InstanceConfig resources.\n",
+                "properties": {
+                    "allowedOrigins": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Exact origins (`scheme://host[:port]`, no wildcards, no path) permitted for the widget / JS SDK and OAuth redirect validation. Native-app webview origins (`tauri://`, `capacitor://`, `ionic://`) are accepted."
+                    },
+                    "authConfig": {
+                        "type": "string",
+                        "description": "The instance auth configuration as a JSON object string (use `jsonencode(...)`). A PARTIAL patch merged into the current config server-side. State holds exactly the patch you wrote (round-tripped verbatim), NOT the server-merged object, so the plan is clean. The full effective configuration is exposed separately as \u003cspan pulumi-lang-nodejs=\"`authConfigResolved`\" pulumi-lang-dotnet=\"`AuthConfigResolved`\" pulumi-lang-go=\"`authConfigResolved`\" pulumi-lang-python=\"`auth_config_resolved`\" pulumi-lang-yaml=\"`authConfigResolved`\" pulumi-lang-java=\"`authConfigResolved`\" pulumi-lang-hcl=\"`auth_config_resolved`\"\u003e`authConfigResolved`\u003c/span\u003e."
+                    },
+                    "authConfigResolved": {
+                        "type": "string",
+                        "description": "The full effective configuration Atlas resolved from your \u003cspan pulumi-lang-nodejs=\"`authConfig`\" pulumi-lang-dotnet=\"`AuthConfig`\" pulumi-lang-go=\"`authConfig`\" pulumi-lang-python=\"`auth_config`\" pulumi-lang-yaml=\"`authConfig`\" pulumi-lang-java=\"`authConfig`\" pulumi-lang-hcl=\"`auth_config`\"\u003e`authConfig`\u003c/span\u003e plus defaults (read-only)."
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Instance creation time (epoch ms)."
+                    },
+                    "environment": {
+                        "type": "string",
+                        "description": "The instance environment (e.g. \u003cspan pulumi-lang-nodejs=\"`production`\" pulumi-lang-dotnet=\"`Production`\" pulumi-lang-go=\"`production`\" pulumi-lang-python=\"`production`\" pulumi-lang-yaml=\"`production`\" pulumi-lang-java=\"`production`\" pulumi-lang-hcl=\"`production`\"\u003e`production`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`development`\" pulumi-lang-dotnet=\"`Development`\" pulumi-lang-go=\"`development`\" pulumi-lang-python=\"`development`\" pulumi-lang-yaml=\"`development`\" pulumi-lang-java=\"`development`\" pulumi-lang-hcl=\"`development`\"\u003e`development`\u003c/span\u003e)."
+                    },
+                    "frontendApiHost": {
+                        "type": "string",
+                        "description": "The instance Frontend API host (read-only; auto-assigned by Atlas)."
+                    },
+                    "publishableKey": {
+                        "type": "string",
+                        "description": "The instance publishable key (`pk_...`)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/jwtTemplate:JwtTemplate": {
+            "properties": {
+                "claims": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Claim name → value-template map. Reserved system claims are rejected by the API."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Template name — the key. Immutable; changing it forces replacement."
+                }
+            },
+            "required": [
+                "claims",
+                "name"
+            ],
+            "inputProperties": {
+                "claims": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Claim name → value-template map. Reserved system claims are rejected by the API."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Template name — the key. Immutable; changing it forces replacement."
+                }
+            },
+            "requiredInputs": [
+                "claims",
+                "name"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering JwtTemplate resources.\n",
+                "properties": {
+                    "claims": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Claim name → value-template map. Reserved system claims are rejected by the API."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Template name — the key. Immutable; changing it forces replacement."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/notificationTemplate:NotificationTemplate": {
+            "properties": {
+                "body": {
+                    "type": "string",
+                    "description": "Notification body. May contain `{{variable}}` placeholders."
+                },
+                "category": {
+                    "type": "string",
+                    "description": "End-user notification category gating the template against the user's preferences: \u003cspan pulumi-lang-nodejs=\"`newDevice`\" pulumi-lang-dotnet=\"`NewDevice`\" pulumi-lang-go=\"`newDevice`\" pulumi-lang-python=\"`new_device`\" pulumi-lang-yaml=\"`newDevice`\" pulumi-lang-java=\"`newDevice`\" pulumi-lang-hcl=\"`new_device`\"\u003e`newDevice`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`unattendedAccess`\" pulumi-lang-dotnet=\"`UnattendedAccess`\" pulumi-lang-go=\"`unattendedAccess`\" pulumi-lang-python=\"`unattended_access`\" pulumi-lang-yaml=\"`unattendedAccess`\" pulumi-lang-java=\"`unattendedAccess`\" pulumi-lang-hcl=\"`unattended_access`\"\u003e`unattendedAccess`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`credentialChange`\" pulumi-lang-dotnet=\"`CredentialChange`\" pulumi-lang-go=\"`credentialChange`\" pulumi-lang-python=\"`credential_change`\" pulumi-lang-yaml=\"`credentialChange`\" pulumi-lang-java=\"`credentialChange`\" pulumi-lang-hcl=\"`credential_change`\"\u003e`credentialChange`\u003c/span\u003e."
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Template name, unique per instance; used to reference the template when sending. Immutable — changing it forces replacement. Also the import id."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "Notification subject. May contain `{{variable}}` placeholders."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch ms)."
+                }
+            },
+            "required": [
+                "body",
+                "category",
+                "createdAt",
+                "name",
+                "subject",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "body": {
+                    "type": "string",
+                    "description": "Notification body. May contain `{{variable}}` placeholders."
+                },
+                "category": {
+                    "type": "string",
+                    "description": "End-user notification category gating the template against the user's preferences: \u003cspan pulumi-lang-nodejs=\"`newDevice`\" pulumi-lang-dotnet=\"`NewDevice`\" pulumi-lang-go=\"`newDevice`\" pulumi-lang-python=\"`new_device`\" pulumi-lang-yaml=\"`newDevice`\" pulumi-lang-java=\"`newDevice`\" pulumi-lang-hcl=\"`new_device`\"\u003e`newDevice`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`unattendedAccess`\" pulumi-lang-dotnet=\"`UnattendedAccess`\" pulumi-lang-go=\"`unattendedAccess`\" pulumi-lang-python=\"`unattended_access`\" pulumi-lang-yaml=\"`unattendedAccess`\" pulumi-lang-java=\"`unattendedAccess`\" pulumi-lang-hcl=\"`unattended_access`\"\u003e`unattendedAccess`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`credentialChange`\" pulumi-lang-dotnet=\"`CredentialChange`\" pulumi-lang-go=\"`credentialChange`\" pulumi-lang-python=\"`credential_change`\" pulumi-lang-yaml=\"`credentialChange`\" pulumi-lang-java=\"`credentialChange`\" pulumi-lang-hcl=\"`credential_change`\"\u003e`credentialChange`\u003c/span\u003e."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Template name, unique per instance; used to reference the template when sending. Immutable — changing it forces replacement. Also the import id."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "Notification subject. May contain `{{variable}}` placeholders."
+                }
+            },
+            "requiredInputs": [
+                "body",
+                "category",
+                "name",
+                "subject"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering NotificationTemplate resources.\n",
+                "properties": {
+                    "body": {
+                        "type": "string",
+                        "description": "Notification body. May contain `{{variable}}` placeholders."
+                    },
+                    "category": {
+                        "type": "string",
+                        "description": "End-user notification category gating the template against the user's preferences: \u003cspan pulumi-lang-nodejs=\"`newDevice`\" pulumi-lang-dotnet=\"`NewDevice`\" pulumi-lang-go=\"`newDevice`\" pulumi-lang-python=\"`new_device`\" pulumi-lang-yaml=\"`newDevice`\" pulumi-lang-java=\"`newDevice`\" pulumi-lang-hcl=\"`new_device`\"\u003e`newDevice`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`unattendedAccess`\" pulumi-lang-dotnet=\"`UnattendedAccess`\" pulumi-lang-go=\"`unattendedAccess`\" pulumi-lang-python=\"`unattended_access`\" pulumi-lang-yaml=\"`unattendedAccess`\" pulumi-lang-java=\"`unattendedAccess`\" pulumi-lang-hcl=\"`unattended_access`\"\u003e`unattendedAccess`\u003c/span\u003e or \u003cspan pulumi-lang-nodejs=\"`credentialChange`\" pulumi-lang-dotnet=\"`CredentialChange`\" pulumi-lang-go=\"`credentialChange`\" pulumi-lang-python=\"`credential_change`\" pulumi-lang-yaml=\"`credentialChange`\" pulumi-lang-java=\"`credentialChange`\" pulumi-lang-hcl=\"`credential_change`\"\u003e`credentialChange`\u003c/span\u003e."
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Template name, unique per instance; used to reference the template when sending. Immutable — changing it forces replacement. Also the import id."
+                    },
+                    "subject": {
+                        "type": "string",
+                        "description": "Notification subject. May contain `{{variable}}` placeholders."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch ms)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/oauthClient:OauthClient": {
+            "properties": {
+                "allowedScopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "OIDC scopes the client may request. Defaults to [openid, profile, email]; openid is required."
+                },
+                "clientId": {
+                    "type": "string",
+                    "description": "The public OAuth\u003cspan pulumi-lang-nodejs=\" clientId \" pulumi-lang-dotnet=\" ClientId \" pulumi-lang-go=\" clientId \" pulumi-lang-python=\" client_id \" pulumi-lang-yaml=\" clientId \" pulumi-lang-java=\" clientId \" pulumi-lang-hcl=\" client_id \"\u003e clientId \u003c/span\u003eused at the authorize/token endpoints."
+                },
+                "clientSecret": {
+                    "type": "string",
+                    "description": "The confidential client secret, revealed only on create. Empty for a public client. Use the rotate flow out of band; a read never returns it.",
+                    "secret": true
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch milliseconds)."
+                },
+                "firstParty": {
+                    "type": "boolean",
+                    "description": "When true the client is first-party and may skip the consent screen. Defaults to false."
+                },
+                "grantTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Allowed grant types. Defaults to [authorization_code,\u003cspan pulumi-lang-nodejs=\" refreshToken]\" pulumi-lang-dotnet=\" RefreshToken]\" pulumi-lang-go=\" refreshToken]\" pulumi-lang-python=\" refresh_token]\" pulumi-lang-yaml=\" refreshToken]\" pulumi-lang-java=\" refreshToken]\" pulumi-lang-hcl=\" refresh_token]\"\u003e refreshToken]\u003c/span\u003e."
+                },
+                "isPublic": {
+                    "type": "boolean",
+                    "description": "True when the client authenticates with PKCE and holds no secret."
+                },
+                "logoUri": {
+                    "type": "string",
+                    "description": "Optional logo URL shown on the consent screen."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable name shown on the consent screen."
+                },
+                "redirectUris": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Allowed redirect URIs. Absolute https (or http://localhost for development)."
+                },
+                "secretPrefix": {
+                    "type": "string",
+                    "description": "Non-secret prefix of the live client secret, for recognising which secret is deployed."
+                },
+                "tokenEndpointAuthMethod": {
+                    "type": "string",
+                    "description": "One of client_secret_basic,\u003cspan pulumi-lang-nodejs=\" clientSecretPost \" pulumi-lang-dotnet=\" ClientSecretPost \" pulumi-lang-go=\" clientSecretPost \" pulumi-lang-python=\" client_secret_post \" pulumi-lang-yaml=\" clientSecretPost \" pulumi-lang-java=\" clientSecretPost \" pulumi-lang-hcl=\" client_secret_post \"\u003e clientSecretPost \u003c/span\u003eor none (public/PKCE). Defaults to client_secret_basic."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch milliseconds)."
+                }
+            },
+            "required": [
+                "allowedScopes",
+                "clientId",
+                "clientSecret",
+                "createdAt",
+                "firstParty",
+                "grantTypes",
+                "isPublic",
+                "name",
+                "redirectUris",
+                "secretPrefix",
+                "tokenEndpointAuthMethod",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "allowedScopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "OIDC scopes the client may request. Defaults to [openid, profile, email]; openid is required."
+                },
+                "firstParty": {
+                    "type": "boolean",
+                    "description": "When true the client is first-party and may skip the consent screen. Defaults to false."
+                },
+                "grantTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Allowed grant types. Defaults to [authorization_code,\u003cspan pulumi-lang-nodejs=\" refreshToken]\" pulumi-lang-dotnet=\" RefreshToken]\" pulumi-lang-go=\" refreshToken]\" pulumi-lang-python=\" refresh_token]\" pulumi-lang-yaml=\" refreshToken]\" pulumi-lang-java=\" refreshToken]\" pulumi-lang-hcl=\" refresh_token]\"\u003e refreshToken]\u003c/span\u003e."
+                },
+                "logoUri": {
+                    "type": "string",
+                    "description": "Optional logo URL shown on the consent screen."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable name shown on the consent screen."
+                },
+                "redirectUris": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Allowed redirect URIs. Absolute https (or http://localhost for development)."
+                },
+                "tokenEndpointAuthMethod": {
+                    "type": "string",
+                    "description": "One of client_secret_basic,\u003cspan pulumi-lang-nodejs=\" clientSecretPost \" pulumi-lang-dotnet=\" ClientSecretPost \" pulumi-lang-go=\" clientSecretPost \" pulumi-lang-python=\" client_secret_post \" pulumi-lang-yaml=\" clientSecretPost \" pulumi-lang-java=\" clientSecretPost \" pulumi-lang-hcl=\" client_secret_post \"\u003e clientSecretPost \u003c/span\u003eor none (public/PKCE). Defaults to client_secret_basic."
+                }
+            },
+            "requiredInputs": [
+                "name",
+                "redirectUris"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering OauthClient resources.\n",
+                "properties": {
+                    "allowedScopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "OIDC scopes the client may request. Defaults to [openid, profile, email]; openid is required."
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "The public OAuth\u003cspan pulumi-lang-nodejs=\" clientId \" pulumi-lang-dotnet=\" ClientId \" pulumi-lang-go=\" clientId \" pulumi-lang-python=\" client_id \" pulumi-lang-yaml=\" clientId \" pulumi-lang-java=\" clientId \" pulumi-lang-hcl=\" client_id \"\u003e clientId \u003c/span\u003eused at the authorize/token endpoints."
+                    },
+                    "clientSecret": {
+                        "type": "string",
+                        "description": "The confidential client secret, revealed only on create. Empty for a public client. Use the rotate flow out of band; a read never returns it.",
+                        "secret": true
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch milliseconds)."
+                    },
+                    "firstParty": {
+                        "type": "boolean",
+                        "description": "When true the client is first-party and may skip the consent screen. Defaults to false."
+                    },
+                    "grantTypes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Allowed grant types. Defaults to [authorization_code,\u003cspan pulumi-lang-nodejs=\" refreshToken]\" pulumi-lang-dotnet=\" RefreshToken]\" pulumi-lang-go=\" refreshToken]\" pulumi-lang-python=\" refresh_token]\" pulumi-lang-yaml=\" refreshToken]\" pulumi-lang-java=\" refreshToken]\" pulumi-lang-hcl=\" refresh_token]\"\u003e refreshToken]\u003c/span\u003e."
+                    },
+                    "isPublic": {
+                        "type": "boolean",
+                        "description": "True when the client authenticates with PKCE and holds no secret."
+                    },
+                    "logoUri": {
+                        "type": "string",
+                        "description": "Optional logo URL shown on the consent screen."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Human-readable name shown on the consent screen."
+                    },
+                    "redirectUris": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Allowed redirect URIs. Absolute https (or http://localhost for development)."
+                    },
+                    "secretPrefix": {
+                        "type": "string",
+                        "description": "Non-secret prefix of the live client secret, for recognising which secret is deployed."
+                    },
+                    "tokenEndpointAuthMethod": {
+                        "type": "string",
+                        "description": "One of client_secret_basic,\u003cspan pulumi-lang-nodejs=\" clientSecretPost \" pulumi-lang-dotnet=\" ClientSecretPost \" pulumi-lang-go=\" clientSecretPost \" pulumi-lang-python=\" client_secret_post \" pulumi-lang-yaml=\" clientSecretPost \" pulumi-lang-java=\" clientSecretPost \" pulumi-lang-hcl=\" client_secret_post \"\u003e clientSecretPost \u003c/span\u003eor none (public/PKCE). Defaults to client_secret_basic."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch milliseconds)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/oauthProvider:OauthProvider": {
+            "properties": {
+                "allowSignIn": {
+                    "type": "boolean",
+                    "description": "Whether existing users may sign in with this provider. Defaults to true. \u003cspan pulumi-lang-nodejs=\"`allowSignIn`\" pulumi-lang-dotnet=\"`AllowSignIn`\" pulumi-lang-go=\"`allowSignIn`\" pulumi-lang-python=\"`allow_sign_in`\" pulumi-lang-yaml=\"`allowSignIn`\" pulumi-lang-java=\"`allowSignIn`\" pulumi-lang-hcl=\"`allow_sign_in`\"\u003e`allowSignIn`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`allowSignUp`\" pulumi-lang-dotnet=\"`AllowSignUp`\" pulumi-lang-go=\"`allowSignUp`\" pulumi-lang-python=\"`allow_sign_up`\" pulumi-lang-yaml=\"`allowSignUp`\" pulumi-lang-java=\"`allowSignUp`\" pulumi-lang-hcl=\"`allow_sign_up`\"\u003e`allowSignUp`\u003c/span\u003e cannot both be false — disable the provider instead."
+                },
+                "allowSignUp": {
+                    "type": "boolean",
+                    "description": "Whether new users may sign up with this provider (JIT account creation). Defaults to true."
+                },
+                "clientId": {
+                    "type": "string",
+                    "description": "The configured client id (not a secret)."
+                },
+                "configured": {
+                    "type": "boolean",
+                    "description": "Whether the provider has credentials configured."
+                },
+                "credentials": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The provider credentials, keyed by the provider's own field keys — typically \u003cspan pulumi-lang-nodejs=\"`clientId`\" pulumi-lang-dotnet=\"`ClientId`\" pulumi-lang-go=\"`clientId`\" pulumi-lang-python=\"`client_id`\" pulumi-lang-yaml=\"`clientId`\" pulumi-lang-java=\"`clientId`\" pulumi-lang-hcl=\"`client_id`\"\u003e`clientId`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`clientSecret`\" pulumi-lang-dotnet=\"`ClientSecret`\" pulumi-lang-go=\"`clientSecret`\" pulumi-lang-python=\"`client_secret`\" pulumi-lang-yaml=\"`clientSecret`\" pulumi-lang-java=\"`clientSecret`\" pulumi-lang-hcl=\"`client_secret`\"\u003e`clientSecret`\u003c/span\u003e. The secret is write-only; never returned by the API.",
+                    "secret": true
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "Human-readable provider name from the catalog."
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the provider is enabled for sign-in. Enabling one with no usable credentials is refused."
+                },
+                "hasSecret": {
+                    "type": "boolean",
+                    "description": "Whether a client secret is stored."
+                },
+                "providerKey": {
+                    "type": "string",
+                    "description": "Catalog key of the social provider (e.g. \u003cspan pulumi-lang-nodejs=\"`google`\" pulumi-lang-dotnet=\"`Google`\" pulumi-lang-go=\"`google`\" pulumi-lang-python=\"`google`\" pulumi-lang-yaml=\"`google`\" pulumi-lang-java=\"`google`\" pulumi-lang-hcl=\"`google`\"\u003e`google`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`github`\" pulumi-lang-dotnet=\"`Github`\" pulumi-lang-go=\"`github`\" pulumi-lang-python=\"`github`\" pulumi-lang-yaml=\"`github`\" pulumi-lang-java=\"`github`\" pulumi-lang-hcl=\"`github`\"\u003e`github`\u003c/span\u003e). Immutable — forces replacement. (Named \u003cspan pulumi-lang-nodejs=\"`providerKey`\" pulumi-lang-dotnet=\"`ProviderKey`\" pulumi-lang-go=\"`providerKey`\" pulumi-lang-python=\"`provider_key`\" pulumi-lang-yaml=\"`providerKey`\" pulumi-lang-java=\"`providerKey`\" pulumi-lang-hcl=\"`provider_key`\"\u003e`providerKey`\u003c/span\u003e because \u003cspan pulumi-lang-nodejs=\"`provider`\" pulumi-lang-dotnet=\"`Provider`\" pulumi-lang-go=\"`provider`\" pulumi-lang-python=\"`provider`\" pulumi-lang-yaml=\"`provider`\" pulumi-lang-java=\"`provider`\" pulumi-lang-hcl=\"`provider`\"\u003e`provider`\u003c/span\u003e is a reserved Terraform meta-argument.)"
+                },
+                "redirectUri": {
+                    "type": "string",
+                    "description": "The redirect/callback URI derived from your instance host. Register this exact string at the provider."
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "OAuth scopes to request. Defaults to the provider's catalog default scopes when unset."
+                },
+                "settings": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Optional provider-specific settings (e.g. a team/tenant domain), keyed by setting key. Write-only; not read back."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch ms)."
+                }
+            },
+            "required": [
+                "allowSignIn",
+                "allowSignUp",
+                "clientId",
+                "configured",
+                "credentials",
+                "displayName",
+                "enabled",
+                "hasSecret",
+                "providerKey",
+                "redirectUri",
+                "scopes",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "allowSignIn": {
+                    "type": "boolean",
+                    "description": "Whether existing users may sign in with this provider. Defaults to true. \u003cspan pulumi-lang-nodejs=\"`allowSignIn`\" pulumi-lang-dotnet=\"`AllowSignIn`\" pulumi-lang-go=\"`allowSignIn`\" pulumi-lang-python=\"`allow_sign_in`\" pulumi-lang-yaml=\"`allowSignIn`\" pulumi-lang-java=\"`allowSignIn`\" pulumi-lang-hcl=\"`allow_sign_in`\"\u003e`allowSignIn`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`allowSignUp`\" pulumi-lang-dotnet=\"`AllowSignUp`\" pulumi-lang-go=\"`allowSignUp`\" pulumi-lang-python=\"`allow_sign_up`\" pulumi-lang-yaml=\"`allowSignUp`\" pulumi-lang-java=\"`allowSignUp`\" pulumi-lang-hcl=\"`allow_sign_up`\"\u003e`allowSignUp`\u003c/span\u003e cannot both be false — disable the provider instead."
+                },
+                "allowSignUp": {
+                    "type": "boolean",
+                    "description": "Whether new users may sign up with this provider (JIT account creation). Defaults to true."
+                },
+                "credentials": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "The provider credentials, keyed by the provider's own field keys — typically \u003cspan pulumi-lang-nodejs=\"`clientId`\" pulumi-lang-dotnet=\"`ClientId`\" pulumi-lang-go=\"`clientId`\" pulumi-lang-python=\"`client_id`\" pulumi-lang-yaml=\"`clientId`\" pulumi-lang-java=\"`clientId`\" pulumi-lang-hcl=\"`client_id`\"\u003e`clientId`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`clientSecret`\" pulumi-lang-dotnet=\"`ClientSecret`\" pulumi-lang-go=\"`clientSecret`\" pulumi-lang-python=\"`client_secret`\" pulumi-lang-yaml=\"`clientSecret`\" pulumi-lang-java=\"`clientSecret`\" pulumi-lang-hcl=\"`client_secret`\"\u003e`clientSecret`\u003c/span\u003e. The secret is write-only; never returned by the API.",
+                    "secret": true
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the provider is enabled for sign-in. Enabling one with no usable credentials is refused."
+                },
+                "providerKey": {
+                    "type": "string",
+                    "description": "Catalog key of the social provider (e.g. \u003cspan pulumi-lang-nodejs=\"`google`\" pulumi-lang-dotnet=\"`Google`\" pulumi-lang-go=\"`google`\" pulumi-lang-python=\"`google`\" pulumi-lang-yaml=\"`google`\" pulumi-lang-java=\"`google`\" pulumi-lang-hcl=\"`google`\"\u003e`google`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`github`\" pulumi-lang-dotnet=\"`Github`\" pulumi-lang-go=\"`github`\" pulumi-lang-python=\"`github`\" pulumi-lang-yaml=\"`github`\" pulumi-lang-java=\"`github`\" pulumi-lang-hcl=\"`github`\"\u003e`github`\u003c/span\u003e). Immutable — forces replacement. (Named \u003cspan pulumi-lang-nodejs=\"`providerKey`\" pulumi-lang-dotnet=\"`ProviderKey`\" pulumi-lang-go=\"`providerKey`\" pulumi-lang-python=\"`provider_key`\" pulumi-lang-yaml=\"`providerKey`\" pulumi-lang-java=\"`providerKey`\" pulumi-lang-hcl=\"`provider_key`\"\u003e`providerKey`\u003c/span\u003e because \u003cspan pulumi-lang-nodejs=\"`provider`\" pulumi-lang-dotnet=\"`Provider`\" pulumi-lang-go=\"`provider`\" pulumi-lang-python=\"`provider`\" pulumi-lang-yaml=\"`provider`\" pulumi-lang-java=\"`provider`\" pulumi-lang-hcl=\"`provider`\"\u003e`provider`\u003c/span\u003e is a reserved Terraform meta-argument.)"
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "OAuth scopes to request. Defaults to the provider's catalog default scopes when unset."
+                },
+                "settings": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Optional provider-specific settings (e.g. a team/tenant domain), keyed by setting key. Write-only; not read back."
+                }
+            },
+            "requiredInputs": [
+                "credentials",
+                "providerKey"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering OauthProvider resources.\n",
+                "properties": {
+                    "allowSignIn": {
+                        "type": "boolean",
+                        "description": "Whether existing users may sign in with this provider. Defaults to true. \u003cspan pulumi-lang-nodejs=\"`allowSignIn`\" pulumi-lang-dotnet=\"`AllowSignIn`\" pulumi-lang-go=\"`allowSignIn`\" pulumi-lang-python=\"`allow_sign_in`\" pulumi-lang-yaml=\"`allowSignIn`\" pulumi-lang-java=\"`allowSignIn`\" pulumi-lang-hcl=\"`allow_sign_in`\"\u003e`allowSignIn`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`allowSignUp`\" pulumi-lang-dotnet=\"`AllowSignUp`\" pulumi-lang-go=\"`allowSignUp`\" pulumi-lang-python=\"`allow_sign_up`\" pulumi-lang-yaml=\"`allowSignUp`\" pulumi-lang-java=\"`allowSignUp`\" pulumi-lang-hcl=\"`allow_sign_up`\"\u003e`allowSignUp`\u003c/span\u003e cannot both be false — disable the provider instead."
+                    },
+                    "allowSignUp": {
+                        "type": "boolean",
+                        "description": "Whether new users may sign up with this provider (JIT account creation). Defaults to true."
+                    },
+                    "clientId": {
+                        "type": "string",
+                        "description": "The configured client id (not a secret)."
+                    },
+                    "configured": {
+                        "type": "boolean",
+                        "description": "Whether the provider has credentials configured."
+                    },
+                    "credentials": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "The provider credentials, keyed by the provider's own field keys — typically \u003cspan pulumi-lang-nodejs=\"`clientId`\" pulumi-lang-dotnet=\"`ClientId`\" pulumi-lang-go=\"`clientId`\" pulumi-lang-python=\"`client_id`\" pulumi-lang-yaml=\"`clientId`\" pulumi-lang-java=\"`clientId`\" pulumi-lang-hcl=\"`client_id`\"\u003e`clientId`\u003c/span\u003e and \u003cspan pulumi-lang-nodejs=\"`clientSecret`\" pulumi-lang-dotnet=\"`ClientSecret`\" pulumi-lang-go=\"`clientSecret`\" pulumi-lang-python=\"`client_secret`\" pulumi-lang-yaml=\"`clientSecret`\" pulumi-lang-java=\"`clientSecret`\" pulumi-lang-hcl=\"`client_secret`\"\u003e`clientSecret`\u003c/span\u003e. The secret is write-only; never returned by the API.",
+                        "secret": true
+                    },
+                    "displayName": {
+                        "type": "string",
+                        "description": "Human-readable provider name from the catalog."
+                    },
+                    "enabled": {
+                        "type": "boolean",
+                        "description": "Whether the provider is enabled for sign-in. Enabling one with no usable credentials is refused."
+                    },
+                    "hasSecret": {
+                        "type": "boolean",
+                        "description": "Whether a client secret is stored."
+                    },
+                    "providerKey": {
+                        "type": "string",
+                        "description": "Catalog key of the social provider (e.g. \u003cspan pulumi-lang-nodejs=\"`google`\" pulumi-lang-dotnet=\"`Google`\" pulumi-lang-go=\"`google`\" pulumi-lang-python=\"`google`\" pulumi-lang-yaml=\"`google`\" pulumi-lang-java=\"`google`\" pulumi-lang-hcl=\"`google`\"\u003e`google`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`github`\" pulumi-lang-dotnet=\"`Github`\" pulumi-lang-go=\"`github`\" pulumi-lang-python=\"`github`\" pulumi-lang-yaml=\"`github`\" pulumi-lang-java=\"`github`\" pulumi-lang-hcl=\"`github`\"\u003e`github`\u003c/span\u003e). Immutable — forces replacement. (Named \u003cspan pulumi-lang-nodejs=\"`providerKey`\" pulumi-lang-dotnet=\"`ProviderKey`\" pulumi-lang-go=\"`providerKey`\" pulumi-lang-python=\"`provider_key`\" pulumi-lang-yaml=\"`providerKey`\" pulumi-lang-java=\"`providerKey`\" pulumi-lang-hcl=\"`provider_key`\"\u003e`providerKey`\u003c/span\u003e because \u003cspan pulumi-lang-nodejs=\"`provider`\" pulumi-lang-dotnet=\"`Provider`\" pulumi-lang-go=\"`provider`\" pulumi-lang-python=\"`provider`\" pulumi-lang-yaml=\"`provider`\" pulumi-lang-java=\"`provider`\" pulumi-lang-hcl=\"`provider`\"\u003e`provider`\u003c/span\u003e is a reserved Terraform meta-argument.)"
+                    },
+                    "redirectUri": {
+                        "type": "string",
+                        "description": "The redirect/callback URI derived from your instance host. Register this exact string at the provider."
+                    },
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "OAuth scopes to request. Defaults to the provider's catalog default scopes when unset."
+                    },
+                    "settings": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Optional provider-specific settings (e.g. a team/tenant domain), keyed by setting key. Write-only; not read back."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch ms)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/orgSettingsSchema:OrgSettingsSchema": {
+            "properties": {
+                "schema": {
+                    "type": "string",
+                    "description": "The JSON Schema document as a JSON string (use `jsonencode(...)`). Must be a JSON object describing the org settings shape, e.g. `{\"type\":\"object\",\"properties\":{...}}`."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last registration time (epoch ms)."
+                },
+                "version": {
+                    "type": "integer",
+                    "description": "Schema version, incremented by Atlas on every registration."
+                }
+            },
+            "required": [
+                "schema",
+                "updatedAt",
+                "version"
+            ],
+            "inputProperties": {
+                "schema": {
+                    "type": "string",
+                    "description": "The JSON Schema document as a JSON string (use `jsonencode(...)`). Must be a JSON object describing the org settings shape, e.g. `{\"type\":\"object\",\"properties\":{...}}`."
+                }
+            },
+            "requiredInputs": [
+                "schema"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering OrgSettingsSchema resources.\n",
+                "properties": {
+                    "schema": {
+                        "type": "string",
+                        "description": "The JSON Schema document as a JSON string (use `jsonencode(...)`). Must be a JSON object describing the org settings shape, e.g. `{\"type\":\"object\",\"properties\":{...}}`."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last registration time (epoch ms)."
+                    },
+                    "version": {
+                        "type": "integer",
+                        "description": "Schema version, incremented by Atlas on every registration."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/organization:Organization": {
+            "properties": {
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "createdBy": {
+                    "type": "string",
+                    "description": "User id of the initial admin. Immutable — changing it forces replacement."
+                },
+                "imageUrl": {
+                    "type": "string",
+                    "description": "Organization logo URL."
+                },
+                "maxAllowedMemberships": {
+                    "type": "integer",
+                    "description": "Optional seat cap. 0 or omitted means unlimited."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Organization name."
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "URL-safe slug."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch ms)."
+                }
+            },
+            "required": [
+                "createdAt",
+                "createdBy",
+                "imageUrl",
+                "maxAllowedMemberships",
+                "name",
+                "slug",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "createdBy": {
+                    "type": "string",
+                    "description": "User id of the initial admin. Immutable — changing it forces replacement."
+                },
+                "maxAllowedMemberships": {
+                    "type": "integer",
+                    "description": "Optional seat cap. 0 or omitted means unlimited."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Organization name."
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "URL-safe slug."
+                }
+            },
+            "requiredInputs": [
+                "createdBy",
+                "name",
+                "slug"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Organization resources.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "description": "User id of the initial admin. Immutable — changing it forces replacement."
+                    },
+                    "imageUrl": {
+                        "type": "string",
+                        "description": "Organization logo URL."
+                    },
+                    "maxAllowedMemberships": {
+                        "type": "integer",
+                        "description": "Optional seat cap. 0 or omitted means unlimited."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Organization name."
+                    },
+                    "slug": {
+                        "type": "string",
+                        "description": "URL-safe slug."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch ms)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/organizationPolicy:OrganizationPolicy": {
+            "properties": {
+                "allowedSignInMethods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Restrict which sign-in strategies a member may use. Each entry is a family (\u003cspan pulumi-lang-nodejs=\"`password`\" pulumi-lang-dotnet=\"`Password`\" pulumi-lang-go=\"`password`\" pulumi-lang-python=\"`password`\" pulumi-lang-yaml=\"`password`\" pulumi-lang-java=\"`password`\" pulumi-lang-hcl=\"`password`\"\u003e`password`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`oauth`\" pulumi-lang-dotnet=\"`Oauth`\" pulumi-lang-go=\"`oauth`\" pulumi-lang-python=\"`oauth`\" pulumi-lang-yaml=\"`oauth`\" pulumi-lang-java=\"`oauth`\" pulumi-lang-hcl=\"`oauth`\"\u003e`oauth`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`saml`\" pulumi-lang-dotnet=\"`Saml`\" pulumi-lang-go=\"`saml`\" pulumi-lang-python=\"`saml`\" pulumi-lang-yaml=\"`saml`\" pulumi-lang-java=\"`saml`\" pulumi-lang-hcl=\"`saml`\"\u003e`saml`\u003c/span\u003e, …) or a specific provider (\u003cspan pulumi-lang-nodejs=\"`oauthGoogle`\" pulumi-lang-dotnet=\"`OauthGoogle`\" pulumi-lang-go=\"`oauthGoogle`\" pulumi-lang-python=\"`oauth_google`\" pulumi-lang-yaml=\"`oauthGoogle`\" pulumi-lang-java=\"`oauthGoogle`\" pulumi-lang-hcl=\"`oauth_google`\"\u003e`oauthGoogle`\u003c/span\u003e). Empty/unset = every method."
+                },
+                "ipAllowlists": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "CIDR / IP allow-list gating sign-in for members of this org. Empty/unset = unrestricted."
+                },
+                "maxSessionAgeSeconds": {
+                    "type": "integer",
+                    "description": "Cap the absolute session lifetime for this org's members, in seconds (300 – 7776000). An org may only shorten, never extend."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "The organization whose policy this manages. Immutable — changing it forces replacement."
+                },
+                "requireMfa": {
+                    "type": "boolean",
+                    "description": "Require an MFA-verified session to hold this org active."
+                },
+                "sessionIdleOverrideMs": {
+                    "type": "integer",
+                    "description": "Override the session idle window while this org is active, in milliseconds."
+                },
+                "ssoRequired": {
+                    "type": "boolean",
+                    "description": "Force enterprise SSO for identifiers whose email domain maps to this org (requires a verified org domain to take effect)."
+                }
+            },
+            "required": [
+                "allowedSignInMethods",
+                "ipAllowlists",
+                "maxSessionAgeSeconds",
+                "organizationId",
+                "requireMfa",
+                "sessionIdleOverrideMs",
+                "ssoRequired"
+            ],
+            "inputProperties": {
+                "allowedSignInMethods": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Restrict which sign-in strategies a member may use. Each entry is a family (\u003cspan pulumi-lang-nodejs=\"`password`\" pulumi-lang-dotnet=\"`Password`\" pulumi-lang-go=\"`password`\" pulumi-lang-python=\"`password`\" pulumi-lang-yaml=\"`password`\" pulumi-lang-java=\"`password`\" pulumi-lang-hcl=\"`password`\"\u003e`password`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`oauth`\" pulumi-lang-dotnet=\"`Oauth`\" pulumi-lang-go=\"`oauth`\" pulumi-lang-python=\"`oauth`\" pulumi-lang-yaml=\"`oauth`\" pulumi-lang-java=\"`oauth`\" pulumi-lang-hcl=\"`oauth`\"\u003e`oauth`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`saml`\" pulumi-lang-dotnet=\"`Saml`\" pulumi-lang-go=\"`saml`\" pulumi-lang-python=\"`saml`\" pulumi-lang-yaml=\"`saml`\" pulumi-lang-java=\"`saml`\" pulumi-lang-hcl=\"`saml`\"\u003e`saml`\u003c/span\u003e, …) or a specific provider (\u003cspan pulumi-lang-nodejs=\"`oauthGoogle`\" pulumi-lang-dotnet=\"`OauthGoogle`\" pulumi-lang-go=\"`oauthGoogle`\" pulumi-lang-python=\"`oauth_google`\" pulumi-lang-yaml=\"`oauthGoogle`\" pulumi-lang-java=\"`oauthGoogle`\" pulumi-lang-hcl=\"`oauth_google`\"\u003e`oauthGoogle`\u003c/span\u003e). Empty/unset = every method."
+                },
+                "ipAllowlists": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "CIDR / IP allow-list gating sign-in for members of this org. Empty/unset = unrestricted."
+                },
+                "maxSessionAgeSeconds": {
+                    "type": "integer",
+                    "description": "Cap the absolute session lifetime for this org's members, in seconds (300 – 7776000). An org may only shorten, never extend."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "The organization whose policy this manages. Immutable — changing it forces replacement."
+                },
+                "requireMfa": {
+                    "type": "boolean",
+                    "description": "Require an MFA-verified session to hold this org active."
+                },
+                "sessionIdleOverrideMs": {
+                    "type": "integer",
+                    "description": "Override the session idle window while this org is active, in milliseconds."
+                },
+                "ssoRequired": {
+                    "type": "boolean",
+                    "description": "Force enterprise SSO for identifiers whose email domain maps to this org (requires a verified org domain to take effect)."
+                }
+            },
+            "requiredInputs": [
+                "organizationId"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering OrganizationPolicy resources.\n",
+                "properties": {
+                    "allowedSignInMethods": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Restrict which sign-in strategies a member may use. Each entry is a family (\u003cspan pulumi-lang-nodejs=\"`password`\" pulumi-lang-dotnet=\"`Password`\" pulumi-lang-go=\"`password`\" pulumi-lang-python=\"`password`\" pulumi-lang-yaml=\"`password`\" pulumi-lang-java=\"`password`\" pulumi-lang-hcl=\"`password`\"\u003e`password`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`oauth`\" pulumi-lang-dotnet=\"`Oauth`\" pulumi-lang-go=\"`oauth`\" pulumi-lang-python=\"`oauth`\" pulumi-lang-yaml=\"`oauth`\" pulumi-lang-java=\"`oauth`\" pulumi-lang-hcl=\"`oauth`\"\u003e`oauth`\u003c/span\u003e, \u003cspan pulumi-lang-nodejs=\"`saml`\" pulumi-lang-dotnet=\"`Saml`\" pulumi-lang-go=\"`saml`\" pulumi-lang-python=\"`saml`\" pulumi-lang-yaml=\"`saml`\" pulumi-lang-java=\"`saml`\" pulumi-lang-hcl=\"`saml`\"\u003e`saml`\u003c/span\u003e, …) or a specific provider (\u003cspan pulumi-lang-nodejs=\"`oauthGoogle`\" pulumi-lang-dotnet=\"`OauthGoogle`\" pulumi-lang-go=\"`oauthGoogle`\" pulumi-lang-python=\"`oauth_google`\" pulumi-lang-yaml=\"`oauthGoogle`\" pulumi-lang-java=\"`oauthGoogle`\" pulumi-lang-hcl=\"`oauth_google`\"\u003e`oauthGoogle`\u003c/span\u003e). Empty/unset = every method."
+                    },
+                    "ipAllowlists": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "CIDR / IP allow-list gating sign-in for members of this org. Empty/unset = unrestricted."
+                    },
+                    "maxSessionAgeSeconds": {
+                        "type": "integer",
+                        "description": "Cap the absolute session lifetime for this org's members, in seconds (300 – 7776000). An org may only shorten, never extend."
+                    },
+                    "organizationId": {
+                        "type": "string",
+                        "description": "The organization whose policy this manages. Immutable — changing it forces replacement."
+                    },
+                    "requireMfa": {
+                        "type": "boolean",
+                        "description": "Require an MFA-verified session to hold this org active."
+                    },
+                    "sessionIdleOverrideMs": {
+                        "type": "integer",
+                        "description": "Override the session idle window while this org is active, in milliseconds."
+                    },
+                    "ssoRequired": {
+                        "type": "boolean",
+                        "description": "Force enterprise SSO for identifiers whose email domain maps to this org (requires a verified org domain to take effect)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/redirectUrl:RedirectUrl": {
+            "properties": {
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "Absolute http(s) URL to allowlist. Immutable — changing it forces replacement."
+                }
+            },
+            "required": [
+                "createdAt",
+                "url"
+            ],
+            "inputProperties": {
+                "url": {
+                    "type": "string",
+                    "description": "Absolute http(s) URL to allowlist. Immutable — changing it forces replacement."
+                }
+            },
+            "requiredInputs": [
+                "url"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering RedirectUrl resources.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "Absolute http(s) URL to allowlist. Immutable — changing it forces replacement."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/resourceServer:ResourceServer": {
+            "properties": {
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch milliseconds)."
+                },
+                "identifier": {
+                    "type": "string",
+                    "description": "The audience (aud) stamped into issued tokens. Immutable — changing it forces replacement."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable name."
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/atlas:index/ResourceServerScope:ResourceServerScope"
+                    },
+                    "description": "Scopes this API defines."
+                },
+                "signingAlg": {
+                    "type": "string",
+                    "description": "JWT signing algorithm for issued tokens (e.g. RS256)."
+                },
+                "tokenTtlSeconds": {
+                    "type": "integer",
+                    "description": "Lifetime of machine tokens for this API, in seconds."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch milliseconds)."
+                }
+            },
+            "required": [
+                "createdAt",
+                "identifier",
+                "name",
+                "scopes",
+                "signingAlg",
+                "tokenTtlSeconds",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "identifier": {
+                    "type": "string",
+                    "description": "The audience (aud) stamped into issued tokens. Immutable — changing it forces replacement."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable name."
+                },
+                "scopes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/atlas:index/ResourceServerScope:ResourceServerScope"
+                    },
+                    "description": "Scopes this API defines."
+                },
+                "signingAlg": {
+                    "type": "string",
+                    "description": "JWT signing algorithm for issued tokens (e.g. RS256)."
+                },
+                "tokenTtlSeconds": {
+                    "type": "integer",
+                    "description": "Lifetime of machine tokens for this API, in seconds."
+                }
+            },
+            "requiredInputs": [
+                "identifier",
+                "name"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering ResourceServer resources.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch milliseconds)."
+                    },
+                    "identifier": {
+                        "type": "string",
+                        "description": "The audience (aud) stamped into issued tokens. Immutable — changing it forces replacement."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Human-readable name."
+                    },
+                    "scopes": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/atlas:index/ResourceServerScope:ResourceServerScope"
+                        },
+                        "description": "Scopes this API defines."
+                    },
+                    "signingAlg": {
+                        "type": "string",
+                        "description": "JWT signing algorithm for issued tokens (e.g. RS256)."
+                    },
+                    "tokenTtlSeconds": {
+                        "type": "integer",
+                        "description": "Lifetime of machine tokens for this API, in seconds."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch milliseconds)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/role:Role": {
+            "properties": {
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Optional description."
+                },
+                "isSystem": {
+                    "type": "boolean",
+                    "description": "True for a built-in system role."
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Stable role key (e.g. billing_admin). Immutable; changing it forces replacement."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable label."
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Permission keys granted by the role. Keys not defined on the instance are dropped by the API."
+                }
+            },
+            "required": [
+                "createdAt",
+                "isSystem",
+                "key",
+                "name",
+                "permissions"
+            ],
+            "inputProperties": {
+                "description": {
+                    "type": "string",
+                    "description": "Optional description."
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Stable role key (e.g. billing_admin). Immutable; changing it forces replacement."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Human-readable label."
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Permission keys granted by the role. Keys not defined on the instance are dropped by the API."
+                }
+            },
+            "requiredInputs": [
+                "key",
+                "name"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering Role resources.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Optional description."
+                    },
+                    "isSystem": {
+                        "type": "boolean",
+                        "description": "True for a built-in system role."
+                    },
+                    "key": {
+                        "type": "string",
+                        "description": "Stable role key (e.g. billing_admin). Immutable; changing it forces replacement."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Human-readable label."
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Permission keys granted by the role. Keys not defined on the instance are dropped by the API."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/ssoConnection:SsoConnection": {
+            "properties": {
+                "allowedDomains": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Email domains this connection applies to."
+                },
+                "claimRoleMappings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/atlas:index/SsoConnectionClaimRoleMapping:SsoConnectionClaimRoleMapping"
+                    },
+                    "description": "Map an IdP claim value onto an Atlas role key."
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "defaultRoleId": {
+                    "type": "string",
+                    "description": "Role granted to users who sign in through this connection when no claim mapping matches."
+                },
+                "discourseProviderUrl": {
+                    "type": "string",
+                    "description": "Discourse provider URL."
+                },
+                "discourseSecret": {
+                    "type": "string",
+                    "description": "Discourse SSO shared secret. Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "hasDiscourseSecret": {
+                    "type": "boolean",
+                    "description": "Whether a Discourse shared secret is stored."
+                },
+                "hasSamlCertificate": {
+                    "type": "boolean",
+                    "description": "Whether a SAML IdP certificate is stored."
+                },
+                "hasSecret": {
+                    "type": "boolean",
+                    "description": "Whether an OIDC client secret is stored."
+                },
+                "oidcClientId": {
+                    "type": "string",
+                    "description": "OIDC client id at the identity provider."
+                },
+                "oidcClientSecret": {
+                    "type": "string",
+                    "description": "OIDC client secret. Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "oidcIssuer": {
+                    "type": "string",
+                    "description": "OIDC issuer URL."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "Optional organization this connection is scoped to."
+                },
+                "samlAllowIdpInitiated": {
+                    "type": "boolean",
+                    "description": "Allow IdP-initiated SAML sign-in."
+                },
+                "samlIdpCertificate": {
+                    "type": "string",
+                    "description": "SAML IdP signing certificate (PEM). Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "samlIdpEntityId": {
+                    "type": "string",
+                    "description": "SAML IdP entity id."
+                },
+                "samlIdpSsoUrl": {
+                    "type": "string",
+                    "description": "SAML IdP single sign-on URL."
+                },
+                "samlSignAuthnRequests": {
+                    "type": "boolean",
+                    "description": "Sign outgoing SAML AuthnRequests."
+                },
+                "samlSpEntityId": {
+                    "type": "string",
+                    "description": "SAML service-provider entity id."
+                },
+                "samlWantResponseSigned": {
+                    "type": "boolean",
+                    "description": "Require the SAML response itself to be signed."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "draft, active or disabled. Activation requires the protocol's mandatory fields."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Connection protocol: oidc, saml or discourse. Immutable — forces replacement."
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "description": "Last update time (epoch ms)."
+                }
+            },
+            "required": [
+                "createdAt",
+                "hasDiscourseSecret",
+                "hasSamlCertificate",
+                "hasSecret",
+                "samlAllowIdpInitiated",
+                "samlSignAuthnRequests",
+                "samlWantResponseSigned",
+                "status",
+                "type",
+                "updatedAt"
+            ],
+            "inputProperties": {
+                "allowedDomains": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Email domains this connection applies to."
+                },
+                "claimRoleMappings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/atlas:index/SsoConnectionClaimRoleMapping:SsoConnectionClaimRoleMapping"
+                    },
+                    "description": "Map an IdP claim value onto an Atlas role key."
+                },
+                "defaultRoleId": {
+                    "type": "string",
+                    "description": "Role granted to users who sign in through this connection when no claim mapping matches."
+                },
+                "discourseProviderUrl": {
+                    "type": "string",
+                    "description": "Discourse provider URL."
+                },
+                "discourseSecret": {
+                    "type": "string",
+                    "description": "Discourse SSO shared secret. Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "oidcClientId": {
+                    "type": "string",
+                    "description": "OIDC client id at the identity provider."
+                },
+                "oidcClientSecret": {
+                    "type": "string",
+                    "description": "OIDC client secret. Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "oidcIssuer": {
+                    "type": "string",
+                    "description": "OIDC issuer URL."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "Optional organization this connection is scoped to."
+                },
+                "samlAllowIdpInitiated": {
+                    "type": "boolean",
+                    "description": "Allow IdP-initiated SAML sign-in."
+                },
+                "samlIdpCertificate": {
+                    "type": "string",
+                    "description": "SAML IdP signing certificate (PEM). Write-only; never returned by the API.",
+                    "secret": true
+                },
+                "samlIdpEntityId": {
+                    "type": "string",
+                    "description": "SAML IdP entity id."
+                },
+                "samlIdpSsoUrl": {
+                    "type": "string",
+                    "description": "SAML IdP single sign-on URL."
+                },
+                "samlSignAuthnRequests": {
+                    "type": "boolean",
+                    "description": "Sign outgoing SAML AuthnRequests."
+                },
+                "samlSpEntityId": {
+                    "type": "string",
+                    "description": "SAML service-provider entity id."
+                },
+                "samlWantResponseSigned": {
+                    "type": "boolean",
+                    "description": "Require the SAML response itself to be signed."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "draft, active or disabled. Activation requires the protocol's mandatory fields."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Connection protocol: oidc, saml or discourse. Immutable — forces replacement."
+                }
+            },
+            "requiredInputs": [
+                "type"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering SsoConnection resources.\n",
+                "properties": {
+                    "allowedDomains": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Email domains this connection applies to."
+                    },
+                    "claimRoleMappings": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/atlas:index/SsoConnectionClaimRoleMapping:SsoConnectionClaimRoleMapping"
+                        },
+                        "description": "Map an IdP claim value onto an Atlas role key."
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "defaultRoleId": {
+                        "type": "string",
+                        "description": "Role granted to users who sign in through this connection when no claim mapping matches."
+                    },
+                    "discourseProviderUrl": {
+                        "type": "string",
+                        "description": "Discourse provider URL."
+                    },
+                    "discourseSecret": {
+                        "type": "string",
+                        "description": "Discourse SSO shared secret. Write-only; never returned by the API.",
+                        "secret": true
+                    },
+                    "hasDiscourseSecret": {
+                        "type": "boolean",
+                        "description": "Whether a Discourse shared secret is stored."
+                    },
+                    "hasSamlCertificate": {
+                        "type": "boolean",
+                        "description": "Whether a SAML IdP certificate is stored."
+                    },
+                    "hasSecret": {
+                        "type": "boolean",
+                        "description": "Whether an OIDC client secret is stored."
+                    },
+                    "oidcClientId": {
+                        "type": "string",
+                        "description": "OIDC client id at the identity provider."
+                    },
+                    "oidcClientSecret": {
+                        "type": "string",
+                        "description": "OIDC client secret. Write-only; never returned by the API.",
+                        "secret": true
+                    },
+                    "oidcIssuer": {
+                        "type": "string",
+                        "description": "OIDC issuer URL."
+                    },
+                    "organizationId": {
+                        "type": "string",
+                        "description": "Optional organization this connection is scoped to."
+                    },
+                    "samlAllowIdpInitiated": {
+                        "type": "boolean",
+                        "description": "Allow IdP-initiated SAML sign-in."
+                    },
+                    "samlIdpCertificate": {
+                        "type": "string",
+                        "description": "SAML IdP signing certificate (PEM). Write-only; never returned by the API.",
+                        "secret": true
+                    },
+                    "samlIdpEntityId": {
+                        "type": "string",
+                        "description": "SAML IdP entity id."
+                    },
+                    "samlIdpSsoUrl": {
+                        "type": "string",
+                        "description": "SAML IdP single sign-on URL."
+                    },
+                    "samlSignAuthnRequests": {
+                        "type": "boolean",
+                        "description": "Sign outgoing SAML AuthnRequests."
+                    },
+                    "samlSpEntityId": {
+                        "type": "string",
+                        "description": "SAML service-provider entity id."
+                    },
+                    "samlWantResponseSigned": {
+                        "type": "boolean",
+                        "description": "Require the SAML response itself to be signed."
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "draft, active or disabled. Activation requires the protocol's mandatory fields."
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Connection protocol: oidc, saml or discourse. Immutable — forces replacement."
+                    },
+                    "updatedAt": {
+                        "type": "integer",
+                        "description": "Last update time (epoch ms)."
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "atlas:index/webhookEndpoint:WebhookEndpoint": {
+            "properties": {
+                "active": {
+                    "type": "boolean",
+                    "description": "Whether the endpoint is currently active."
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "description": "Creation time (epoch ms)."
+                },
+                "disabledAt": {
+                    "type": "integer",
+                    "description": "When the endpoint was disabled (epoch ms), if it has been."
+                },
+                "enabledEvents": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Event types to deliver, or [\"*\"] for all. Updatable in place (the secret is preserved)."
+                },
+                "secret": {
+                    "type": "string",
+                    "description": "The signing secret, revealed only on create.",
+                    "secret": true
+                },
+                "url": {
+                    "type": "string",
+                    "description": "HTTPS URL that receives event deliveries. Updatable in place (the secret is preserved)."
+                }
+            },
+            "required": [
+                "active",
+                "createdAt",
+                "disabledAt",
+                "enabledEvents",
+                "secret",
+                "url"
+            ],
+            "inputProperties": {
+                "enabledEvents": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Event types to deliver, or [\"*\"] for all. Updatable in place (the secret is preserved)."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "HTTPS URL that receives event deliveries. Updatable in place (the secret is preserved)."
+                }
+            },
+            "requiredInputs": [
+                "url"
+            ],
+            "stateInputs": {
+                "description": "Input properties used for looking up and filtering WebhookEndpoint resources.\n",
+                "properties": {
+                    "active": {
+                        "type": "boolean",
+                        "description": "Whether the endpoint is currently active."
+                    },
+                    "createdAt": {
+                        "type": "integer",
+                        "description": "Creation time (epoch ms)."
+                    },
+                    "disabledAt": {
+                        "type": "integer",
+                        "description": "When the endpoint was disabled (epoch ms), if it has been."
+                    },
+                    "enabledEvents": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Event types to deliver, or [\"*\"] for all. Updatable in place (the secret is preserved)."
+                    },
+                    "secret": {
+                        "type": "string",
+                        "description": "The signing secret, revealed only on create.",
+                        "secret": true
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "HTTPS URL that receives event deliveries. Updatable in place (the secret is preserved)."
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "functions": {
+        "atlas:index/getOauthClient:getOauthClient": {
+            "inputs": {
+                "description": "A collection of arguments for invoking getOauthClient.\n",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id"
+                ]
+            },
+            "outputs": {
+                "description": "A collection of values returned by getOauthClient.\n",
+                "properties": {
+                    "allowedScopes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "clientId": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "integer"
+                    },
+                    "firstParty": {
+                        "type": "boolean"
+                    },
+                    "grantTypes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "isPublic": {
+                        "type": "boolean"
+                    },
+                    "logoUri": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "redirectUris": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "secretPrefix": {
+                        "type": "string"
+                    },
+                    "tokenEndpointAuthMethod": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "allowedScopes",
+                    "clientId",
+                    "createdAt",
+                    "firstParty",
+                    "grantTypes",
+                    "id",
+                    "isPublic",
+                    "logoUri",
+                    "name",
+                    "redirectUris",
+                    "secretPrefix",
+                    "tokenEndpointAuthMethod",
+                    "updatedAt"
+                ],
+                "type": "object"
+            }
+        },
+        "atlas:index/getOauthProvider:getOauthProvider": {
+            "inputs": {
+                "description": "A collection of arguments for invoking getOauthProvider.\n",
+                "properties": {
+                    "providerKey": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "providerKey"
+                ]
+            },
+            "outputs": {
+                "description": "A collection of values returned by getOauthProvider.\n",
+                "properties": {
+                    "allowSignIn": {
+                        "type": "boolean"
+                    },
+                    "allowSignUp": {
+                        "type": "boolean"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "clientId": {
+                        "type": "string"
+                    },
+                    "configured": {
+                        "type": "boolean"
+                    },
+                    "defaultScopes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "hasSecret": {
+                        "type": "boolean"
+                    },
+                    "providerKey": {
+                        "type": "string"
+                    },
+                    "redirectUri": {
+                        "type": "string"
+                    },
+                    "scopes": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "tier": {
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "allowSignIn",
+                    "allowSignUp",
+                    "category",
+                    "clientId",
+                    "configured",
+                    "defaultScopes",
+                    "displayName",
+                    "enabled",
+                    "hasSecret",
+                    "providerKey",
+                    "redirectUri",
+                    "scopes",
+                    "tier",
+                    "updatedAt"
+                ],
+                "type": "object"
+            }
+        },
+        "atlas:index/getResourceServer:getResourceServer": {
+            "inputs": {
+                "description": "A collection of arguments for invoking getResourceServer.\n",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id"
+                ]
+            },
+            "outputs": {
+                "description": "A collection of values returned by getResourceServer.\n",
+                "properties": {
+                    "createdAt": {
+                        "type": "integer"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "identifier": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "scopes": {
+                        "items": {
+                            "$ref": "#/types/atlas:index/getResourceServerScope:getResourceServerScope"
+                        },
+                        "type": "array"
+                    },
+                    "signingAlg": {
+                        "type": "string"
+                    },
+                    "tokenTtlSeconds": {
+                        "type": "integer"
+                    },
+                    "updatedAt": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "createdAt",
+                    "id",
+                    "identifier",
+                    "name",
+                    "scopes",
+                    "signingAlg",
+                    "tokenTtlSeconds",
+                    "updatedAt"
+                ],
+                "type": "object"
+            }
+        },
+        "pulumi:providers:atlas/terraformConfig": {
+            "description": "This function returns a Terraform config object with terraform-namecased keys,to be used with the Terraform Module Provider.",
+            "inputs": {
+                "properties": {
+                    "__self__": {
+                        "type": "ref",
+                        "$ref": "#/provider"
+                    }
+                },
+                "type": "pulumi:providers:atlas/terraformConfig",
+                "required": [
+                    "__self__"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "result": {
+                        "additionalProperties": {
+                            "$ref": "pulumi.json#/Any"
+                        },
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "result"
+                ],
+                "type": "object"
+            }
+        }
+    }
+}
