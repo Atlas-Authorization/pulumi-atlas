@@ -46,7 +46,7 @@ func Provider() tfbridge.ProviderInfo {
 
 		Name:        "atlas",
 		DisplayName: "Atlas",
-		Publisher:   "Atlas-Authorization",
+		Publisher:   "atlas-authorization",
 		Version:     Version,
 		Description: "A Pulumi package for managing Atlas authentication-platform resources " +
 			"(OAuth clients, SSO connections, resource servers, JWT templates, webhooks, " +
