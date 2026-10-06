@@ -81,6 +81,7 @@ func Provider() tfbridge.ProviderInfo {
 			"atlas_org_settings_schema":   atlasResource("OrgSettingsSchema"),
 			"atlas_notification_template": atlasResource("NotificationTemplate"),
 			"atlas_email_template":        atlasResource("EmailTemplate"),
+			"atlas_notification_category": atlasResource("NotificationCategory"),
 		},
 
 		// --- Data-source token mappings (TF type -> Pulumi getter token) ---
