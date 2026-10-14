@@ -8,6 +8,18 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Mappings for the resources and data source added in
+  `terraform-provider-atlas` 0.7.0: `IdApp` (Sign in with Atlas apps — set the
+  provider's `platformKey`), `InstanceDesign`, `OrganizationDesign`,
+  `CookieConsent`, `EntitlementOverride`, `EmailProvider`, `SmsProvider`, and
+  the `getInstancePreflight` function. The new `platformKey` provider
+  configuration and the extended `WebhookEndpoint`, `OauthProvider` and
+  `OrganizationPolicy` inputs come through the bridge automatically.
+- `NotificationCategory` resource mapping (17 bridged resources before this
+  release).
+
+### Initial release
+
 - Initial Pulumi provider for Atlas, bridged from `terraform-provider-atlas`
   via `pulumi-terraform-bridge` v3 (plugin-framework path).
 - 16 bridged resources: `OauthClient`, `OauthProvider`, `SsoConnection`,

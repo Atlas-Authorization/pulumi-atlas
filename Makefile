@@ -39,6 +39,8 @@ tfgen:
 # Pure Go — needs no external tools.
 schema: tfgen
 	$(WORKING_DIR)/bin/$(TFGEN) schema --out $(PROVIDER_PATH)/cmd/$(PROVIDER)
+	# tfgen drops the top-level "version" the Pulumi registry needs; put it back.
+	node scripts/set-schema-version.mjs $(SCHEMA_FILE) $(VERSION)
 
 # Build the runtime resource plugin. Pure Go — embeds schema.json (run `make
 # schema` first if the mapping changed).
@@ -63,6 +65,9 @@ build_go: tfgen
 
 build_dotnet: tfgen
 	$(WORKING_DIR)/bin/$(TFGEN) dotnet --out sdk/dotnet
+	# The generated csproj embeds version.txt as a resource; `dotnet build`
+	# fails without it.
+	echo "$(VERSION)" > sdk/dotnet/version.txt
 
 clean:
 	rm -rf bin sdk

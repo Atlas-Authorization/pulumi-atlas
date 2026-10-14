@@ -96,7 +96,7 @@ web, err := atlas.NewOauthClient(ctx, "web", &atlas.OauthClientArgs{
 
 ## Resources & data sources
 
-16 resources and 3 data sources are bridged. Pulumi tokens follow the canonical
+24 resources and 4 data sources are bridged. Pulumi tokens follow the canonical
 `atlas:index/<camelName>:<PascalName>` form.
 
 | Terraform type                | Pulumi resource                   |
@@ -117,9 +117,21 @@ web, err := atlas.NewOauthClient(ctx, "web", &atlas.OauthClientArgs{
 | `atlas_org_settings_schema`   | `atlas:index:OrgSettingsSchema`   |
 | `atlas_notification_template` | `atlas:index:NotificationTemplate`|
 | `atlas_email_template`        | `atlas:index:EmailTemplate`       |
+| `atlas_notification_category` | `atlas:index:NotificationCategory`|
+| `atlas_id_app`                | `atlas:index:IdApp`               |
+| `atlas_instance_design`       | `atlas:index:InstanceDesign`      |
+| `atlas_organization_design`   | `atlas:index:OrganizationDesign`  |
+| `atlas_cookie_consent`        | `atlas:index:CookieConsent`       |
+| `atlas_entitlement_override`  | `atlas:index:EntitlementOverride` |
+| `atlas_email_provider`        | `atlas:index:EmailProvider`       |
+| `atlas_sms_provider`          | `atlas:index:SmsProvider`         |
 
 Data sources: `atlas_oauth_client` → `getOauthClient`, `atlas_oauth_provider` →
-`getOauthProvider`, `atlas_resource_server` → `getResourceServer`.
+`getOauthProvider`, `atlas_resource_server` → `getResourceServer`,
+`atlas_instance_preflight` → `getInstancePreflight`.
+
+`IdApp` (Sign in with Atlas apps) needs the provider's `platformKey`
+(`psk_...`, or `ATLAS_PLATFORM_KEY`).
 
 ## Building from source
 
@@ -158,6 +170,11 @@ SDK generation needs the [Pulumi CLI](https://www.pulumi.com/docs/install/) on
 make build_sdks          # all languages
 make build_nodejs        # or one at a time: nodejs | python | go | dotnet
 ```
+
+`make schema` also restores the schema's top-level `"version"` (tfgen drops it)
+from `VERSION` via `scripts/set-schema-version.mjs`, so it needs `node` on `PATH`.
+The `Pulumi SDKs` GitHub Actions workflow runs the same targets on Linux with the
+HCL examples converted into the docs, and uploads the result as an artifact.
 
 The generated sources land under `sdk/<lang>/`. Package them with the native
 language tooling (`npm`, `pip`/`build`, `go`, `dotnet`) before publishing.

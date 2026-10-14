@@ -50,7 +50,8 @@ func Provider() tfbridge.ProviderInfo {
 		Version:     Version,
 		Description: "A Pulumi package for managing Atlas authentication-platform resources " +
 			"(OAuth clients, SSO connections, resource servers, JWT templates, webhooks, " +
-			"roles, organizations, custom domains and more) as code.",
+			"roles, organizations, custom domains, sign-in page design, messaging providers, " +
+			"Sign in with Atlas apps and more) as code.",
 		Keywords: []string{
 			"pulumi", "atlas", "auth", "authentication", "identity",
 			"category/network", "category/infrastructure",
@@ -59,6 +60,11 @@ func Provider() tfbridge.ProviderInfo {
 		Homepage:   "https://atlasauth.net",
 		Repository: "https://github.com/Atlas-Authorization/pulumi-atlas",
 		GitHubOrg:  "Atlas-Authorization",
+		// The upstream provider lives in this monorepo (go.mod replace), not in
+		// the module cache under the GitHub path tfgen would derive, so point the
+		// docs lookup at it directly. Relative to the pulumi-atlas root, where
+		// tfgen runs.
+		UpstreamRepoPath: "../terraform-provider-atlas",
 		// Runtime bridge metadata, written next to schema.json by tfgen and
 		// required by the generator.
 		MetadataInfo: tfbridge.NewProviderMetadata(nil),
@@ -82,13 +88,21 @@ func Provider() tfbridge.ProviderInfo {
 			"atlas_notification_template": atlasResource("NotificationTemplate"),
 			"atlas_email_template":        atlasResource("EmailTemplate"),
 			"atlas_notification_category": atlasResource("NotificationCategory"),
+			"atlas_id_app":                atlasResource("IdApp"),
+			"atlas_instance_design":       atlasResource("InstanceDesign"),
+			"atlas_organization_design":   atlasResource("OrganizationDesign"),
+			"atlas_cookie_consent":        atlasResource("CookieConsent"),
+			"atlas_entitlement_override":  atlasResource("EntitlementOverride"),
+			"atlas_email_provider":        atlasResource("EmailProvider"),
+			"atlas_sms_provider":          atlasResource("SmsProvider"),
 		},
 
 		// --- Data-source token mappings (TF type -> Pulumi getter token) ---
 		DataSources: map[string]*tfbridge.DataSourceInfo{
-			"atlas_oauth_client":    atlasDataSource("getOauthClient"),
-			"atlas_oauth_provider":  atlasDataSource("getOauthProvider"),
-			"atlas_resource_server": atlasDataSource("getResourceServer"),
+			"atlas_oauth_client":       atlasDataSource("getOauthClient"),
+			"atlas_oauth_provider":     atlasDataSource("getOauthProvider"),
+			"atlas_resource_server":    atlasDataSource("getResourceServer"),
+			"atlas_instance_preflight": atlasDataSource("getInstancePreflight"),
 		},
 
 		// --- Per-language SDK package paths ---
