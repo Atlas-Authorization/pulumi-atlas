@@ -216,4 +216,4 @@ every SDK on each pull request and push to `main`.
 
 ## License
 
-Apache-2.0.
+MIT.

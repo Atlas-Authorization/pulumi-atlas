@@ -12,7 +12,7 @@
         "category/infrastructure"
     ],
     "homepage": "https://atlasauth.net",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "attribution": "This Pulumi package is based on the [`atlas` Terraform Provider](https://github.com/Atlas-Authorization/terraform-provider-atlas).",
     "repository": "https://github.com/Atlas-Authorization/pulumi-atlas",
     "pluginDownloadURL": "github://api.github.com/Atlas-Authorization",

@@ -56,7 +56,7 @@ func Provider() tfbridge.ProviderInfo {
 			"pulumi", "atlas", "auth", "authentication", "identity",
 			"category/network", "category/infrastructure",
 		},
-		License:    "Apache-2.0",
+		License:    "MIT",
 		Homepage:   "https://atlasauth.net",
 		Repository: "https://github.com/Atlas-Authorization/pulumi-atlas",
 		GitHubOrg:  "Atlas-Authorization",
