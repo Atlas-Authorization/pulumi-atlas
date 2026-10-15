@@ -60,6 +60,9 @@ func Provider() tfbridge.ProviderInfo {
 		Homepage:   "https://atlasauth.net",
 		Repository: "https://github.com/Atlas-Authorization/pulumi-atlas",
 		GitHubOrg:  "Atlas-Authorization",
+		// The SDKs tell the Pulumi engine to fetch the resource plugin from this
+		// repo's GitHub releases (pulumi-resource-atlas-vX.Y.Z-<os>-<arch>.tar.gz).
+		PluginDownloadURL: "github://api.github.com/Atlas-Authorization",
 		// The upstream provider lives in this monorepo (go.mod replace), not in
 		// the module cache under the GitHub path tfgen would derive, so point the
 		// docs lookup at it directly. Relative to the pulumi-atlas root, where
@@ -107,7 +110,7 @@ func Provider() tfbridge.ProviderInfo {
 
 		// --- Per-language SDK package paths ---
 		JavaScript: &tfbridge.JavaScriptInfo{
-			PackageName: "@atlas-authorization/pulumi-atlas",
+			PackageName: "@atlasauth/pulumi",
 			Dependencies: map[string]string{
 				"@pulumi/pulumi": "^3.0.0",
 			},
@@ -116,7 +119,7 @@ func Provider() tfbridge.ProviderInfo {
 			},
 		},
 		Python: &tfbridge.PythonInfo{
-			PackageName: "atlas_authorization_pulumi_atlas",
+			PackageName: "pulumi_atlasauth",
 			Requires: map[string]string{
 				"pulumi": ">=3.0.0,<4.0.0",
 			},

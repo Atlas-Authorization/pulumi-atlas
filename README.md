@@ -29,19 +29,16 @@ environment variables are preferred.
 
 ## Install
 
-> The SDKs are generated (see "Generating the SDKs" below) and published to the
-> usual registries as part of a release. Once published:
-
 **Node.js / TypeScript**
 
 ```bash
-npm install @atlas-authorization/pulumi-atlas
+npm install @atlasauth/pulumi
 ```
 
 **Python**
 
 ```bash
-pip install atlas_authorization_pulumi_atlas
+pip install pulumi-atlasauth
 ```
 
 **Go**
@@ -56,12 +53,19 @@ go get github.com/Atlas-Authorization/pulumi-atlas/sdk/go/atlas
 dotnet add package AtlasAuthorization.Atlas
 ```
 
+The SDKs install the matching `pulumi-resource-atlas` plugin automatically from
+this repository's GitHub releases. To install it by hand:
+
+```bash
+pulumi plugin install resource atlas v0.8.0 --server github://api.github.com/Atlas-Authorization
+```
+
 ## Example
 
 TypeScript — create an OAuth client:
 
 ```typescript
-import * as atlas from "@atlas-authorization/pulumi-atlas";
+import * as atlas from "@atlasauth/pulumi";
 
 const web = new atlas.OauthClient("web", {
     name: "Web App",
@@ -75,7 +79,7 @@ export const clientId = web.clientId;
 Python:
 
 ```python
-import atlas_authorization_pulumi_atlas as atlas
+import pulumi_atlasauth as atlas
 
 web = atlas.OauthClient("web",
     name="Web App",
@@ -152,14 +156,22 @@ cd provider && go build ./...
 
 ### How the TF provider is referenced
 
-`terraform-provider-atlas` is not yet published as a tagged Go module, so
-`provider/go.mod` pulls it in via a `replace` directive pointing at the sibling
-`../../terraform-provider-atlas` directory. The TF provider keeps its
-implementation in `internal/`, which Go forbids other modules from importing;
-this bridge therefore imports the small exported shim at
+`provider/go.mod` pulls in `terraform-provider-atlas` via a `replace` directive
+pointing at a sibling `../../terraform-provider-atlas` directory. To build from
+a clone of this repository, check out
+[`Atlas-Authorization/terraform-provider-atlas`](https://github.com/Atlas-Authorization/terraform-provider-atlas)
+next to it at the same version tag (the two providers are versioned in step):
+
+```bash
+git clone https://github.com/Atlas-Authorization/pulumi-atlas
+git clone --branch v0.8.0 https://github.com/Atlas-Authorization/terraform-provider-atlas
+cd pulumi-atlas && make provider
+```
+
+The TF provider keeps its implementation in `internal/`, which Go forbids other
+modules from importing; this bridge therefore imports the small exported shim at
 `terraform-provider-atlas/shim` (`shim.NewProvider`), which is the only public
-entry point needed. **For a real release, publish `terraform-provider-atlas` as
-a tagged Go module (or vendor it) and repoint/remove the `replace`.**
+entry point needed.
 
 ## Generating the SDKs
 
@@ -183,23 +195,24 @@ folders; generate from the committed schema with the Pulumi CLI instead:
 The generated sources land under `sdk/<lang>/`. Package them with the native
 language tooling (`npm`, `pip`/`build`, `go`, `dotnet`) before publishing.
 
-## Cutting a Pulumi-registry release
+## Cutting a release
 
-1. Publish `terraform-provider-atlas` as a tagged Go module (or vendor it) and
-   update `provider/go.mod`'s `replace`/`require` accordingly.
-2. `make schema` — regenerate and commit `schema.json`.
-3. `make build_sdks` — generate the Node/Python/Go/.NET SDK sources.
-4. Build release binaries of `pulumi-resource-atlas` for each target platform
-   (set the version via `-ldflags "-X .../provider.Version=X.Y.Z"`), package the
-   SDKs, and publish:
-   - npm: `@atlas-authorization/pulumi-atlas`
-   - PyPI: `atlas_authorization_pulumi_atlas`
-   - Go: tag `sdk/go/...`
-   - NuGet: `AtlasAuthorization.Atlas`
-5. Submit the provider to the
-   [Pulumi Registry](https://www.pulumi.com/registry/) (publisher
-   `Atlas-Authorization`) per
-   <https://www.pulumi.com/docs/using-pulumi/pulumi-packages/publishing/>.
+Releases are built by GitHub Actions (`.github/workflows/release.yml`). Bump
+`VERSION` in the `Makefile` and `Version` in `provider/resources.go`, add a
+`CHANGELOG.md` entry, make sure `terraform-provider-atlas` has the same tag, then
+push a `vX.Y.Z` tag. The workflow:
+
+1. regenerates `schema.json` and the Node.js, Python, Go and .NET SDKs;
+2. builds `pulumi-resource-atlas` for linux/darwin/windows on amd64/arm64 and
+   attaches `pulumi-resource-atlas-vX.Y.Z-<os>-<arch>.tar.gz` to the GitHub
+   release;
+3. publishes `@atlasauth/pulumi` to npm, `pulumi-atlasauth` to PyPI and
+   `AtlasAuthorization.Atlas` to NuGet (skipped when `NUGET_API_KEY` is not
+   set), and tags the Go SDK as `sdk/vX.Y.Z`.
+
+Every publish step is idempotent, so re-running a failed release only does what
+is still missing. `.github/workflows/build.yml` builds the provider and compiles
+every SDK on each pull request and push to `main`.
 
 ## License
 

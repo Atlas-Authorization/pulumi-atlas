@@ -6,7 +6,19 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.8.0]
 
-Versioned in step with `terraform-provider-atlas` from this release on.
+Versioned in step with `terraform-provider-atlas` from this release on. First
+release published to the package registries.
+
+### Changed
+
+- SDK package names: Node.js `@atlasauth/pulumi` (was
+  `@atlas-authorization/pulumi-atlas`), Python `pulumi-atlasauth`, imported as
+  `pulumi_atlasauth` (was `atlas_authorization_pulumi_atlas`). Go
+  (`github.com/Atlas-Authorization/pulumi-atlas/sdk/go/atlas`) and .NET
+  (`AtlasAuthorization.Atlas`) are unchanged.
+- The schema sets `pluginDownloadURL` to
+  `github://api.github.com/Atlas-Authorization`, so the SDKs install the
+  `pulumi-resource-atlas` plugin from this repository's GitHub releases.
 
 ### Added
 

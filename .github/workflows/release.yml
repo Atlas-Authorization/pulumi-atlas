@@ -1,0 +1,301 @@
+name: Release
+
+# Cuts a release when a v* tag is pushed:
+#   1. regenerates schema.json and the Node.js, Python, Go and .NET SDKs at the
+#      tag's version;
+#   2. builds the pulumi-resource-atlas plugin for linux/darwin/windows on
+#      amd64/arm64 and attaches it to a GitHub release, named the way the Pulumi
+#      engine expects for `github://api.github.com/Atlas-Authorization`:
+#        pulumi-resource-atlas-v<version>-<os>-<arch>.tar.gz
+#   3. publishes the Node.js SDK to npm (NPM_TOKEN), the Python SDK to PyPI
+#      (PYPI_API_TOKEN) and the .NET SDK to NuGet (NUGET_API_KEY; skipped when
+#      the secret is not set), and tags the Go SDK as sdk/v<version>.
+#
+# Every publish step is idempotent, so re-running the workflow (or re-pushing
+# the tag) after a partial failure only does what is still missing.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to (re-)release, e.g. v0.8.0
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    defaults:
+      run:
+        working-directory: pulumi-atlas
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          path: pulumi-atlas
+
+      - name: Resolve the version
+        id: v
+        run: |
+          v="${TAG#v}"
+          [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo "bad tag $TAG"; exit 1; }
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+
+      # terraform-provider-atlas is versioned in step with this provider.
+      - uses: actions/checkout@v4
+        with:
+          repository: Atlas-Authorization/terraform-provider-atlas
+          ref: ${{ env.TAG }}
+          path: terraform-provider-atlas
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pulumi-atlas/provider/go.mod
+          cache-dependency-path: pulumi-atlas/provider/go.sum
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install the Pulumi CLI (example conversion uses it)
+        uses: pulumi/actions@v6
+
+      - name: Generate schema and SDKs
+        run: make VERSION=${{ steps.v.outputs.version }} schema build_sdks
+
+      - name: Package the Node.js SDK
+        run: |
+          set -euo pipefail
+          cd sdk/nodejs
+          npm install --no-audit --no-fund --loglevel=error
+          npx tsc
+          cp package.json bin/
+          [ -f README.md ] && cp README.md bin/ || true
+          cp ../../LICENSE bin/ 2>/dev/null || true
+          # Point the published manifest at the compiled output in bin/.
+          node -e '
+            const fs = require("fs"); const p = "bin/package.json";
+            const j = JSON.parse(fs.readFileSync(p, "utf8"));
+            j.version = process.argv[1];
+            for (const k of ["main", "types", "typings"]) if (typeof j[k] === "string") j[k] = j[k].replace(/^(\.\/)?bin\//, "");
+            delete j.scripts?.build; delete j.devDependencies;
+            j.publishConfig = { access: "public" };
+            fs.writeFileSync(p, JSON.stringify(j, null, 2) + "\n");
+          ' "${{ steps.v.outputs.version }}"
+          (cd bin && npm pack --silent && ls -l *.tgz)
+
+      - name: Package the Python SDK
+        run: |
+          set -euo pipefail
+          python -m pip install -q build
+          cd sdk/python
+          python -m build --outdir dist .
+          ls -l dist
+
+      - name: Package the .NET SDK
+        run: |
+          set -euo pipefail
+          cd sdk/dotnet
+          dotnet pack -nologo -v q -c Release -p:Version=${{ steps.v.outputs.version }} -o nupkg
+          ls -l nupkg
+
+      - name: Check the Go SDK compiles
+        run: |
+          set -euo pipefail
+          cd sdk
+          printf 'module github.com/Atlas-Authorization/pulumi-atlas/sdk\n\ngo 1.25\n' > go.mod
+          go mod tidy
+          go build ./go/...
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: generated
+          if-no-files-found: error
+          path: |
+            pulumi-atlas/provider/cmd/pulumi-resource-atlas/schema.json
+            pulumi-atlas/provider/cmd/pulumi-resource-atlas/bridge-metadata.json
+            pulumi-atlas/sdk/nodejs/bin/*.tgz
+            pulumi-atlas/sdk/python/dist/
+            pulumi-atlas/sdk/dotnet/nupkg/
+            pulumi-atlas/sdk/go/
+            pulumi-atlas/sdk/go.mod
+            pulumi-atlas/sdk/go.sum
+
+  plugins:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: pulumi-atlas
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          path: pulumi-atlas
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Atlas-Authorization/terraform-provider-atlas
+          ref: ${{ env.TAG }}
+          path: terraform-provider-atlas
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pulumi-atlas/provider/go.mod
+          cache-dependency-path: pulumi-atlas/provider/go.sum
+
+      # The plugin embeds schema.json, so build it from the freshly generated one.
+      - uses: actions/download-artifact@v4
+        with:
+          name: generated
+          path: generated
+
+      - name: Build the plugin for every platform
+        env:
+          VERSION: ${{ needs.generate.outputs.version }}
+        run: |
+          set -euo pipefail
+          cp ../generated/provider/cmd/pulumi-resource-atlas/schema.json \
+             ../generated/provider/cmd/pulumi-resource-atlas/bridge-metadata.json \
+             provider/cmd/pulumi-resource-atlas/
+          mkdir -p ../dist
+          for target in linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64; do
+            os="${target%/*}"; arch="${target#*/}"
+            ext=""; [ "$os" = windows ] && ext=".exe"
+            out="$RUNNER_TEMP/build/$os-$arch"
+            mkdir -p "$out"
+            (cd provider && CGO_ENABLED=0 GOOS="$os" GOARCH="$arch" go build -trimpath \
+              -ldflags "-s -w -X github.com/atlas/pulumi-atlas/provider.Version=$VERSION" \
+              -o "$out/pulumi-resource-atlas$ext" ./cmd/pulumi-resource-atlas)
+            cp LICENSE README.md "$out/" 2>/dev/null || cp README.md "$out/"
+            tar -C "$out" -czf "../dist/pulumi-resource-atlas-v$VERSION-$os-$arch.tar.gz" .
+          done
+          (cd ../dist && sha256sum *.tar.gz > "pulumi-atlas_${VERSION}_checksums.txt" && ls -l)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plugins
+          if-no-files-found: error
+          path: dist/
+
+  publish:
+    needs: [generate, plugins]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERSION: ${{ needs.generate.outputs.version }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: GitHub release with the plugin binaries
+        run: |
+          set -euo pipefail
+          notes="$(awk -v v="$VERSION" '
+            $0 ~ "^## \\[" v "\\]" {on=1; next}
+            on && /^## \[/ {exit}
+            on {print}' CHANGELOG.md)"
+          [ -n "$notes" ] || notes="Release $TAG"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" artifacts/plugins/* --clobber
+          else
+            gh release create "$TAG" artifacts/plugins/* --title "$TAG" --notes "$notes" --verify-tag
+          fi
+
+      - name: Publish the Node.js SDK to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          tgz="$(ls artifacts/generated/sdk/nodejs/bin/*.tgz)"
+          name="$(tar -xOzf "$tgz" package/package.json | node -pe 'JSON.parse(require("fs").readFileSync(0)).name')"
+          if npm view "$name@$VERSION" version >/dev/null 2>&1; then
+            echo "$name@$VERSION is already on npm"
+          else
+            npm publish "$tgz" --access public
+          fi
+
+      - name: Publish the Python SDK to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          python -m pip install -q twine
+          python -m twine upload --skip-existing --non-interactive artifacts/generated/sdk/python/dist/*
+
+      - name: Publish the .NET SDK to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NUGET_API_KEY:-}" ]; then
+            echo "::warning::NUGET_API_KEY is not set; skipping the NuGet publish"
+            exit 0
+          fi
+          dotnet nuget push "artifacts/generated/sdk/dotnet/nupkg/*.nupkg" \
+            --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      # Go modules are fetched from git, so the generated Go SDK is committed on
+      # top of the release commit and tagged sdk/v<version> (the module lives at
+      # sdk/, so Go resolves that tag for github.com/Atlas-Authorization/pulumi-atlas/sdk).
+      - name: Tag the Go SDK
+        run: |
+          set -euo pipefail
+          gotag="sdk/v$VERSION"
+          if git ls-remote --exit-code --tags origin "refs/tags/$gotag" >/dev/null; then
+            echo "$gotag already exists"; exit 0
+          fi
+          rm -rf sdk/go
+          mkdir -p sdk
+          cp -r artifacts/generated/sdk/go artifacts/generated/sdk/go.mod artifacts/generated/sdk/go.sum sdk/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f sdk/go sdk/go.mod sdk/go.sum
+          git commit -q -m "Go SDK $VERSION"
+          git tag "$gotag"
+          git push origin "refs/tags/$gotag"
+          # Warm the Go module proxy so `go get` sees it right away.
+          curl -fsS "https://proxy.golang.org/github.com/!atlas-!authorization/pulumi-atlas/sdk/@v/v$VERSION.info" || true

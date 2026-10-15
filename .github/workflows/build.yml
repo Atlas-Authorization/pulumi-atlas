@@ -1,0 +1,88 @@
+name: Build
+
+# Builds the bridged provider and its code generator, regenerates the schema and
+# the four language SDKs, and compiles each SDK. Runs on every PR and on pushes
+# to main.
+#
+# The provider bridges terraform-provider-atlas, which provider/go.mod pulls in
+# from the sibling directory ../../terraform-provider-atlas. CI recreates that
+# layout: this repo is checked out at ./pulumi-atlas and the public
+# Atlas-Authorization/terraform-provider-atlas repo at ./terraform-provider-atlas,
+# at the tag matching VERSION in the Makefile (the two are versioned in step).
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: pulumi-atlas
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: pulumi-atlas
+
+      - name: Resolve the Terraform provider version
+        id: tf
+        run: echo "ref=v$(sed -nE 's/^VERSION[[:space:]]*\?=[[:space:]]*([^[:space:]]+).*/\1/p' Makefile)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          repository: Atlas-Authorization/terraform-provider-atlas
+          ref: ${{ steps.tf.outputs.ref }}
+          path: terraform-provider-atlas
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pulumi-atlas/provider/go.mod
+          cache-dependency-path: pulumi-atlas/provider/go.sum
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install the Pulumi CLI (example conversion uses it)
+        uses: pulumi/actions@v6
+
+      - name: Build and vet the provider
+        run: |
+          cd provider
+          go build ./...
+          go vet ./...
+          go test ./...
+
+      - name: Generate schema and SDKs
+        run: make schema build_sdks provider
+
+      - name: Compile the generated SDKs
+        run: |
+          set -euo pipefail
+          (cd sdk/nodejs && npm install --no-audit --no-fund --loglevel=error && npx tsc)
+          python -m pip install -q "pulumi>=3,<4" ./sdk/python
+          (cd /tmp && python -c "import pulumi_atlasauth")
+          (cd sdk && printf 'module github.com/Atlas-Authorization/pulumi-atlas/sdk\n\ngo 1.25\n' > go.mod \
+            && go mod tidy && go build ./go/... && rm go.mod go.sum)
+          (cd sdk/dotnet && dotnet build -nologo -v q)
+
+      - name: Report schema drift
+        run: git diff --stat -- provider/cmd/pulumi-resource-atlas/ || true
