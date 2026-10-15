@@ -110,6 +110,16 @@ jobs:
           set -euo pipefail
           python -m pip install -q build
           cd sdk/python
+          # The Python codegen leaves the version as a 0.0.0 placeholder.
+          python - "${{ steps.v.outputs.version }}" <<'PY'
+          import re, sys
+          p = "pyproject.toml"
+          s = open(p).read()
+          s, n = re.subn(r'(?m)^(\s*)version\s*=\s*"[^"]*"', r'\g<1>version = "%s"' % sys.argv[1], s, count=1)
+          assert n == 1, "no version line in pyproject.toml"
+          open(p, "w").write(s)
+          PY
+          grep -n '^ *version' pyproject.toml
           python -m build --outdir dist .
           ls -l dist
 
@@ -117,7 +127,8 @@ jobs:
         run: |
           set -euo pipefail
           cd sdk/dotnet
-          dotnet pack -nologo -v q -c Release -p:Version=${{ steps.v.outputs.version }} -o nupkg
+          dotnet build -nologo -c Release -p:Version=${{ steps.v.outputs.version }}
+          dotnet pack -nologo --no-build -c Release -p:Version=${{ steps.v.outputs.version }} -o nupkg
           ls -l nupkg
 
       - name: Check the Go SDK compiles
