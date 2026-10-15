@@ -1,0 +1,3 @@
+name: atlas
+description: A Pulumi resource provider for atlas.
+language: go
