@@ -110,16 +110,29 @@ jobs:
           set -euo pipefail
           python -m pip install -q build
           cd sdk/python
-          # The Python codegen leaves the version as a 0.0.0 placeholder.
+          # The Python codegen leaves the version as a 0.0.0 placeholder (in
+          # setup.py or pyproject.toml, depending on the codegen mode).
           python - "${{ steps.v.outputs.version }}" <<'PY'
-          import re, sys
-          p = "pyproject.toml"
-          s = open(p).read()
-          s, n = re.subn(r'(?m)^(\s*)version\s*=\s*"[^"]*"', r'\g<1>version = "%s"' % sys.argv[1], s, count=1)
-          assert n == 1, "no version line in pyproject.toml"
-          open(p, "w").write(s)
+          import os, re, sys
+          v = sys.argv[1]
+          subs = {
+              "pyproject.toml": [(r'(?m)^(\s*)version\s*=\s*"[^"]*"', r'\g<1>version = "%s"' % v)],
+              "setup.py": [(r'(?m)^VERSION\s*=.*$', 'VERSION = "%s"' % v),
+                           (r'(?m)^PLUGIN_VERSION\s*=.*$', 'PLUGIN_VERSION = "%s"' % v),
+                           (r'version\s*=\s*"0\.0\.0"', 'version="%s"' % v)],
+          }
+          done = 0
+          for f, rules in subs.items():
+              if not os.path.exists(f):
+                  continue
+              s = open(f).read()
+              for pat, rep in rules:
+                  s, n = re.subn(pat, rep, s, count=1)
+                  done += n
+              open(f, "w").write(s)
+          assert done, "no version found to set in setup.py / pyproject.toml"
           PY
-          grep -n '^ *version' pyproject.toml
+          grep -nE '^ *(VERSION|PLUGIN_VERSION|version) *=' setup.py pyproject.toml 2>/dev/null || true
           python -m build --outdir dist .
           ls -l dist
 
