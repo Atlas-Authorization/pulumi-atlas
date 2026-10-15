@@ -20,7 +20,7 @@ const (
 // semver string (pf/tfbridge.Main and pf/tfgen.Main both reject an empty or
 // non-semver version). Override at release time with
 // -ldflags "-X github.com/atlas/pulumi-atlas/provider.Version=x.y.z".
-var Version = "0.1.0"
+var Version = "0.8.0"
 
 // atlasResource is a small helper that produces a canonical Pulumi resource
 // token, e.g. ("OauthClient") -> "atlas:index/oauthClient:OauthClient".

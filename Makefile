@@ -2,7 +2,7 @@ PACK            := atlas
 PROJECT         := github.com/atlas/pulumi-atlas
 PROVIDER        := pulumi-resource-$(PACK)
 TFGEN           := pulumi-tfgen-$(PACK)
-VERSION         ?= 0.1.0
+VERSION         ?= 0.8.0
 PROVIDER_PATH   := provider
 LDFLAGS         := -X $(PROJECT)/provider.Version=$(VERSION)
 

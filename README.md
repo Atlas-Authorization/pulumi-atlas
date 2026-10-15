@@ -176,6 +176,10 @@ from `VERSION` via `scripts/set-schema-version.mjs`, so it needs `node` on `PATH
 The `Pulumi SDKs` GitHub Actions workflow runs the same targets on Linux with the
 HCL examples converted into the docs, and uploads the result as an artifact.
 
+On Windows, `pulumi-tfgen-atlas <lang>` cannot create the SDK's nested
+folders; generate from the committed schema with the Pulumi CLI instead:
+`pulumi package gen-sdk provider/cmd/pulumi-resource-atlas/schema.json --language <lang> --out sdk`.
+
 The generated sources land under `sdk/<lang>/`. Package them with the native
 language tooling (`npm`, `pip`/`build`, `go`, `dotnet`) before publishing.
 

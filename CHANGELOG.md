@@ -4,10 +4,22 @@ All notable changes to the Pulumi Atlas provider are documented here. The
 format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.8.0]
+
+Versioned in step with `terraform-provider-atlas` from this release on.
 
 ### Added
 
+- Inputs and outputs from `terraform-provider-atlas` 0.8.0:
+  - `OauthClient.skipLogoutConfirmation` (boolean, default `false`;
+    first-party clients only, so a preview fails when the client is
+    third-party) and `getOauthClient` output `skipLogoutConfirmation`.
+  - `CookieConsent.settingsLink` (`CookieConsentSettingsLink`: `label`,
+    `preset`, `attributes`, and output `renderedAttributes`) — a "Cookie
+    settings" link in the hosted pages' footer.
+  - `EmailProvider.forceDestroy` (boolean, default `false`) — delete removes
+    the provider even while email-dependent features are on; without it,
+    Atlas's `409 EMAIL_PROVIDER_IN_USE` now says how to proceed.
 - Mappings for the resources and data source added in
   `terraform-provider-atlas` 0.7.0: `IdApp` (Sign in with Atlas apps — set the
   provider's `platformKey`), `InstanceDesign`, `OrganizationDesign`,
@@ -34,4 +46,4 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Per-language SDK package mappings for Node.js, Python, Go and .NET.
 - `make` targets: `tfgen`, `schema`, `provider`, `build_sdks`.
 
-[Unreleased]: https://github.com/Atlas-Authorization/pulumi-atlas
+[0.8.0]: https://github.com/Atlas-Authorization/pulumi-atlas
