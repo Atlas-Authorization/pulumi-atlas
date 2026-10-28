@@ -99,6 +99,11 @@ func Provider() tfbridge.ProviderInfo {
 			"atlas_entitlement_override":  atlasResource("EntitlementOverride"),
 			"atlas_email_provider":        atlasResource("EmailProvider"),
 			"atlas_sms_provider":          atlasResource("SmsProvider"),
+			// The `integration` attribute would be a member named like its .NET class.
+			"atlas_integration": {
+				Tok:    tfbridge.MakeResource(mainPkg, mainMod, "Integration"),
+				Fields: map[string]*tfbridge.SchemaInfo{"integration": {Name: "integrationId"}},
+			},
 		},
 
 		// --- Data-source token mappings (TF type -> Pulumi getter token) ---
