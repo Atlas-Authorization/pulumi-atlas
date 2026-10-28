@@ -4,6 +4,17 @@ All notable changes to the Pulumi Atlas provider are documented here. The
 format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Every resource and data source of the Terraform provider is now bridged (123 resources, 34 functions in the schema), including the 83 typed resources generated from the Backend API for the re-audit tracks and the remaining collections: MCP gateways, connection actions and triggers, agent lifecycle, conditional access and device assurance, workflows, chat integrations, IGA, administrative units, FGA assertions and materializations, coupons, audit retention, customer-managed keys, SCIM targets, WS-Fed connections, groups, machines, actions, flows, feature flags, network zones and more. Resources without an explicit token get the standard one (`atlas_mcp_gateway` becomes `atlas:index/mcpGateway:McpGateway`, its data source `getMcpGateway`).
+- New properties on existing resources: `OauthClient.oidcMetadata`, `BillingPlan.graceDays`, `OrganizationPolicy.ssoBypass` and `itContacts`, `SsoConnection.requireConsentScreen`.
+
+### Changed
+
+- The `integration` attribute of `atlas.Integration` is named `integrationId` in the SDKs (a .NET member cannot share its class's name).
+
 ## [0.8.0]
 
 Versioned in step with `terraform-provider-atlas` from this release on. First
