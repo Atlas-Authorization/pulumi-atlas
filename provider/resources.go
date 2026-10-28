@@ -8,6 +8,7 @@ import (
 	tfshim "github.com/atlas/terraform-provider-atlas/shim"
 	pf "github.com/pulumi/pulumi-terraform-bridge/v3/pkg/pf/tfbridge"
 	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge"
+	"github.com/pulumi/pulumi-terraform-bridge/v3/pkg/tfbridge/tokens"
 )
 
 // Package/module identifiers for the generated Pulumi tokens.
@@ -39,7 +40,7 @@ func atlasDataSource(name string) *tfbridge.DataSourceInfo {
 // Package Schema and the per-language SDKs; the resource plugin consumes it at
 // runtime to serve the bridged provider.
 func Provider() tfbridge.ProviderInfo {
-	return tfbridge.ProviderInfo{
+	prov := tfbridge.ProviderInfo{
 		// P wraps the plugin-framework provider. ShimProvider adapts a
 		// terraform-plugin-framework provider into the bridge's shim.Provider.
 		P: pf.ShimProvider(tfshim.NewProvider(Version)),
@@ -138,4 +139,13 @@ func Provider() tfbridge.ProviderInfo {
 			},
 		},
 	}
+
+	// Every other resource and data source of the Terraform provider (the
+	// table-driven ones included) gets the standard token: atlas_mcp_gateway ->
+	// atlas:index/mcpGateway:McpGateway, and getMcpGateway for its data source.
+	// The explicit entries above win; the default fixups are skipped so the
+	// existing resources keep exactly the schema they have shipped with.
+	prov.SkipDefaultFixups = true
+	prov.MustComputeTokens(tokens.SingleModule("atlas_", mainMod, tokens.MakeStandard(mainPkg)))
+	return prov
 }

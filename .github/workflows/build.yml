@@ -12,7 +12,7 @@ name: Build
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, 'ci/**']
   workflow_dispatch:
 
 permissions:
@@ -41,7 +41,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Atlas-Authorization/terraform-provider-atlas
-          ref: ${{ steps.tf.outputs.ref }}
+          # A ci/* branch builds against the Terraform provider branch of the same name.
+          ref: ${{ startsWith(github.ref_name, 'ci/') && github.ref_name || steps.tf.outputs.ref }}
           path: terraform-provider-atlas
 
       - uses: actions/setup-go@v5
@@ -86,3 +87,11 @@ jobs:
 
       - name: Report schema drift
         run: git diff --stat -- provider/cmd/pulumi-resource-atlas/ || true
+
+      - name: Keep the regenerated schema
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema
+          path: |
+            pulumi-atlas/provider/cmd/pulumi-resource-atlas/schema.json
+            pulumi-atlas/provider/cmd/pulumi-resource-atlas/bridge-metadata.json
